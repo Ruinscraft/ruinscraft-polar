@@ -6,11 +6,13 @@ import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
 
+import com.ruinscraft.polar.PolarPlugin;
+
 public class PolarPopulator extends BlockPopulator {
 
 	@Override
 	public void populate(World world, Random random, Chunk chunk) {
-		// stuff
+		PolarPlugin.getInstance().getPopulatorHandler().handleChunk(world, chunk);
 	}
 
 }
