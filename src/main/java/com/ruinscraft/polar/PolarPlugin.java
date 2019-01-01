@@ -1,7 +1,5 @@
 package com.ruinscraft.polar;
 
-import java.util.Random;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.ruinscraft.polar.listeners.EnvironmentListener;
