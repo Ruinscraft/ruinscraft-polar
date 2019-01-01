@@ -1,0 +1,5 @@
+name: ${name}
+main: ${mainClass}
+version: ${version}
+api-version: 1.13
+load: startup

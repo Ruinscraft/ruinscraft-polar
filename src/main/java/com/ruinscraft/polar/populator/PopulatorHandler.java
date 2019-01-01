@@ -5,6 +5,7 @@ import java.util.Random;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.Waterlogged;
@@ -52,7 +53,7 @@ public class PopulatorHandler {
 			return;
 		case TRAPPED_CHEST:
 		case CHEST:
-			Chest chest = (Chest) block;
+			Chest chest = (Chest) block.getState();
 			Inventory inventory = chest.getInventory();
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
 				ItemStack item = inventory.getItem(slot);
@@ -68,7 +69,7 @@ public class PopulatorHandler {
 
 	public void handleNegativeBlock(Block block) {
 		block = checkIfWaterlogged(block);
-
+		if (block.getY() == 0) block.setBiome(Biome.DESERT);
 		// handle blocks which are on the bad side
 		switch (block.getType()) {
 		case DARK_OAK_LEAVES:
@@ -201,10 +202,9 @@ public class PopulatorHandler {
 			Chest chest = (Chest) block.getState();
 			Inventory inventory = chest.getInventory();
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
-				int randomInt = (int) (random.nextDouble() * 5);
 				ItemStack item = inventory.getItem(slot);
 				if (item == null) continue;
-				item.setAmount(item.getAmount() + randomInt);
+				item.setAmount(item.getAmount() + ((int) random.nextDouble() * 5));
 			}
 			return;
 		case WATER:
@@ -339,7 +339,7 @@ public class PopulatorHandler {
 	// ex. 20 out of 40 == 50% chance
 	public boolean getChanceOutOf(int number, int outOf) {
 		int nextInt = random.nextInt(outOf);
-		if (nextInt >= number) return true;
+		if (nextInt <= number) return true;
 		return false;
 	}
 
