@@ -9,7 +9,6 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.Waterlogged;
-import org.bukkit.block.data.type.Slab;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,8 +26,13 @@ public class PopulatorHandler {
 				for (int y = 0; y < 216; y++) { // world shouldn't go above ~216 for y, right?
 					Block block = chunk.getBlock(x, y, z);
 
-					if (chunk.getX() >= 0) handlePositiveBlock(block);
-					else handleNegativeBlock(block);
+					if (chunk.getX() >= 0) {
+						handlePositiveBlock(block);
+					} else {
+						handleNegativeBlock(block);
+						block = checkIfWaterlogged(block);
+						if (block.getY() == 0) block.setBiome(Biome.DESERT);
+					}
 				}
 			}
 		}
@@ -68,8 +72,6 @@ public class PopulatorHandler {
 	}
 
 	public void handleNegativeBlock(Block block) {
-		block = checkIfWaterlogged(block);
-		if (block.getY() == 0) block.setBiome(Biome.DESERT);
 		// handle blocks which are on the bad side
 		switch (block.getType()) {
 		case DARK_OAK_LEAVES:
@@ -181,8 +183,6 @@ public class PopulatorHandler {
 			return;
 		case SANDSTONE_SLAB:
 			set(block, Material.RED_SANDSTONE_SLAB);
-			Slab slab = (Slab) block;
-			if (slab.isWaterlogged()) slab.setWaterlogged(false);
 			return;
 		case OAK_WOOD:
 		case DARK_OAK_WOOD:
@@ -204,13 +204,37 @@ public class PopulatorHandler {
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
 				ItemStack item = inventory.getItem(slot);
 				if (item == null) continue;
-				item.setAmount(item.getAmount() + ((int) random.nextDouble() * 5));
+				item.setAmount(item.getAmount() + ((int) random.nextDouble() * 7));
 			}
 			return;
 		case WATER:
-			if (block.getY() < 64) {
-				set(block, Material.AIR);
+			if (block.getY() < 64) set(block, Material.AIR);
+			else set(block, Material.LAVA);
+			return;
+		case STONE:
+			if (block.getY() < 14) {
+				if (chanceOutOf(1, 15000)) set(block, Material.GOLD_BLOCK);
+				if (chanceOutOf(1, 200)) set(block, Material.DIAMOND_ORE);
+				if (chanceOutOf(1, 100)) set(block, Material.GOLD_ORE);
 				return;
+			}
+			if (block.getY() < 34) {
+				if (chanceOutOf(1, 80)) set(block, Material.GOLD_ORE);
+				if (block.getBiome() == Biome.BADLANDS) {
+					if (chanceOutOf(1, 30)) set(block, Material.GOLD_ORE);
+				}
+				if (chanceOutOf(1, 80)) set(block, Material.LAPIS_ORE);
+				if (chanceOutOf(1, 60)) set(block, Material.GOLD_ORE);
+				if (block.getBiome() == Biome.MOUNTAINS ||
+						block.getBiome() == Biome.GRAVELLY_MOUNTAINS ||
+						block.getBiome() == Biome.MODIFIED_GRAVELLY_MOUNTAINS ||
+						block.getBiome() == Biome.WOODED_MOUNTAINS ||
+						block.getBiome() == Biome.MOUNTAIN_EDGE) {
+					if (chanceOutOf(1, 30)) set(block, Material.EMERALD_ORE);
+				}
+			}
+			if (block.getY() < 63) {
+				
 			}
 		default:
 			return;
@@ -332,12 +356,12 @@ public class PopulatorHandler {
 
 	// chance out of 100
 	public boolean chance(int number) {
-		return getChanceOutOf(number, 100);
+		return chanceOutOf(number, 100);
 	}
 
 	// chance out of any value
 	// ex. 20 out of 40 == 50% chance
-	public boolean getChanceOutOf(int number, int outOf) {
+	public boolean chanceOutOf(int number, int outOf) {
 		int nextInt = random.nextInt(outOf);
 		if (nextInt <= number) return true;
 		return false;
