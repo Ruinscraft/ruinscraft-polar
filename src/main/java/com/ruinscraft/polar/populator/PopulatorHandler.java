@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.inventory.Inventory;
@@ -38,8 +39,8 @@ public class PopulatorHandler {
 		}
 	}
 
+	// handle blocks which on the good side
 	public void handlePositiveBlock(Block block) {
-		// handle blocks which on the good side
 		switch (block.getType()) {
 		case DIAMOND_ORE:
 		case GOLD_ORE:
@@ -71,8 +72,8 @@ public class PopulatorHandler {
 		}
 	}
 
+	// handle blocks which are on the bad side
 	public void handleNegativeBlock(Block block) {
-		// handle blocks which are on the bad side
 		switch (block.getType()) {
 		case DARK_OAK_LEAVES:
 		case ACACIA_LEAVES:
@@ -97,6 +98,8 @@ public class PopulatorHandler {
 		case TALL_SEAGRASS:
 		case SUGAR_CANE:
 		case CACTUS:
+		case MELON:
+		case PUMPKIN:
 		case SUNFLOWER:
 		case AZURE_BLUET:
 		case DANDELION:
@@ -184,16 +187,16 @@ public class PopulatorHandler {
 		case SANDSTONE_SLAB:
 			set(block, Material.RED_SANDSTONE_SLAB);
 			return;
-		case OAK_WOOD:
-		case DARK_OAK_WOOD:
-		case ACACIA_WOOD:
-		case BIRCH_WOOD:
-		case JUNGLE_WOOD:
-		case SPRUCE_WOOD:
-			if (chance(3)) {
-				set(block, Material.FIRE);
-				return;
-			}
+		case OAK_PLANKS:
+		case DARK_OAK_PLANKS:
+		case ACACIA_PLANKS:
+		case BIRCH_PLANKS:
+		case JUNGLE_PLANKS:
+		case SPRUCE_PLANKS:
+			if (chance(6)) set(block, Material.FIRE);
+			else if (chance(60)) set(block, Material.AIR);
+			else if (chance(60)) set(block, Material.STONE);
+			return;
 		case SNOW_BLOCK:
 			set(block, Material.STONE);
 			return;
@@ -204,7 +207,9 @@ public class PopulatorHandler {
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
 				ItemStack item = inventory.getItem(slot);
 				if (item == null) continue;
-				item.setAmount(item.getAmount() + ((int) random.nextDouble() * 7));
+				if (item.getMaxStackSize() == 1) continue;
+				int randomInt = (int) (random.nextDouble() * 7);
+				item.setAmount(item.getAmount() + randomInt);
 			}
 			return;
 		case WATER:
@@ -214,28 +219,27 @@ public class PopulatorHandler {
 		case STONE:
 			if (block.getY() < 14) {
 				if (chanceOutOf(1, 15000)) set(block, Material.GOLD_BLOCK);
-				if (chanceOutOf(1, 200)) set(block, Material.DIAMOND_ORE);
-				if (chanceOutOf(1, 100)) set(block, Material.GOLD_ORE);
-				return;
+				if (chanceOutOf(1, 220)) set(block, Material.DIAMOND_ORE);
+				if (chanceOutOf(1, 120)) set(block, Material.GOLD_ORE);
 			}
 			if (block.getY() < 34) {
-				if (chanceOutOf(1, 80)) set(block, Material.GOLD_ORE);
+				if (chanceOutOf(1, 100)) set(block, Material.GOLD_ORE);
 				if (block.getBiome() == Biome.BADLANDS) {
-					if (chanceOutOf(1, 30)) set(block, Material.GOLD_ORE);
+					if (chanceOutOf(1, 40)) set(block, Material.GOLD_ORE);
 				}
-				if (chanceOutOf(1, 80)) set(block, Material.LAPIS_ORE);
-				if (chanceOutOf(1, 60)) set(block, Material.GOLD_ORE);
+				if (chanceOutOf(1, 180)) set(block, Material.LAPIS_ORE);
 				if (block.getBiome() == Biome.MOUNTAINS ||
 						block.getBiome() == Biome.GRAVELLY_MOUNTAINS ||
 						block.getBiome() == Biome.MODIFIED_GRAVELLY_MOUNTAINS ||
 						block.getBiome() == Biome.WOODED_MOUNTAINS ||
 						block.getBiome() == Biome.MOUNTAIN_EDGE) {
-					if (chanceOutOf(1, 30)) set(block, Material.EMERALD_ORE);
+					if (chanceOutOf(1, 40)) set(block, Material.EMERALD_ORE);
 				}
 			}
 			if (block.getY() < 63) {
-				
+				if (chanceOutOf(1, 50)) set(block, Material.IRON_ORE);
 			}
+			return;
 		default:
 			return;
 		}
@@ -345,9 +349,11 @@ public class PopulatorHandler {
 		case CHEST:
 		case TRAPPED_CHEST:
 			if (block instanceof Waterlogged) {
-				Waterlogged waterlogged = (Waterlogged) block;
+				BlockState state = block.getState();
+				Waterlogged waterlogged = (Waterlogged) state.getBlockData();
 				waterlogged.setWaterlogged(false);
-				return block;
+				state.setBlockData(waterlogged);
+				state.update(true, false);
 			}
 		default:
 			return block;
