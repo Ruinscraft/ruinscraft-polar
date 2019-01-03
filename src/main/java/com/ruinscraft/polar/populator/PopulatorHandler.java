@@ -7,15 +7,15 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.Bisected.Half;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Stairs;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import com.ruinscraft.polar.PolarPlugin;
 
 public class PopulatorHandler {
 
@@ -86,7 +86,7 @@ public class PopulatorHandler {
 		case JUNGLE_LEAVES:
 			set(block, Material.OAK_LEAVES);
 		case OAK_LEAVES:
-			if (chance(80)) set(block, Material.AIR);
+			if (chance(85)) set(block, Material.AIR);
 			return;
 		case GRASS:
 		case TALL_GRASS:
@@ -186,10 +186,16 @@ public class PopulatorHandler {
 			set(block, Material.CUT_RED_SANDSTONE);
 			return;
 		case SANDSTONE_STAIRS:
-			Stairs stairs = (Stairs) block.getState();
+			Stairs stairs = (Stairs) block.getBlockData().clone();
+			BlockFace face = stairs.getFacing();
+			Half half = stairs.getHalf();
 			Stairs.Shape shape = stairs.getShape();
-			set(block, Material.RED_SANDSTONE_STAIRS);
-			stairs.setShape(shape);
+			block.setType(Material.RED_SANDSTONE_STAIRS);
+			Stairs updatedStairs = (Stairs) block.getBlockData();
+			updatedStairs.setShape(shape);
+			updatedStairs.setFacing(face);
+			updatedStairs.setHalf(half);
+			block.setBlockData(updatedStairs);
 			return;
 		case SANDSTONE_SLAB:
 			set(block, Material.RED_SANDSTONE_SLAB);
@@ -223,6 +229,18 @@ public class PopulatorHandler {
 			if (block.getY() < 64) set(block, Material.AIR);
 			else set(block, Material.LAVA);
 			return;
+		case COBBLESTONE:
+			if (chance(25)) set(block, Material.MOSSY_COBBLESTONE);
+			if (chance(10)) set(block, Material.INFESTED_COBBLESTONE);
+			return;
+		case COBBLESTONE_WALL:
+			if (chance(25)) set(block, Material.MOSSY_COBBLESTONE_WALL);
+			return;
+		case STONE_BRICKS:
+			if (chance(25)) set(block, Material.MOSSY_STONE_BRICKS);
+			if (chance(10)) set(block, Material.INFESTED_STONE_BRICKS);
+			if (chance(7)) set(block, Material.INFESTED_MOSSY_STONE_BRICKS);
+			return;
 		case STONE:
 			if (block.getY() < 14) {
 				if (chanceOutOf(1, 15000)) set(block, Material.GOLD_BLOCK);
@@ -246,6 +264,7 @@ public class PopulatorHandler {
 			if (block.getY() < 63) {
 				if (chanceOutOf(1, 50)) set(block, Material.IRON_ORE);
 			}
+			if (chance(2)) set(block, Material.INFESTED_STONE);
 			return;
 		default:
 			return;
