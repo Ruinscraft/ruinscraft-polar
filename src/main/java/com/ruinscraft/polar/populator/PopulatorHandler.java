@@ -9,9 +9,13 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
+import org.bukkit.block.data.type.Stairs;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import com.ruinscraft.polar.PolarPlugin;
 
 public class PopulatorHandler {
 
@@ -31,7 +35,7 @@ public class PopulatorHandler {
 						handlePositiveBlock(block);
 					} else {
 						handleNegativeBlock(block);
-						block = checkIfWaterlogged(block);
+						checkIfWaterlogged(block);
 						if (block.getY() == 0) block.setBiome(Biome.DESERT);
 					}
 				}
@@ -182,7 +186,10 @@ public class PopulatorHandler {
 			set(block, Material.CUT_RED_SANDSTONE);
 			return;
 		case SANDSTONE_STAIRS:
+			Stairs stairs = (Stairs) block.getState();
+			Stairs.Shape shape = stairs.getShape();
 			set(block, Material.RED_SANDSTONE_STAIRS);
+			stairs.setShape(shape);
 			return;
 		case SANDSTONE_SLAB:
 			set(block, Material.RED_SANDSTONE_SLAB);
@@ -250,7 +257,7 @@ public class PopulatorHandler {
 		block.setType(material, false);
 	}
 
-	public Block checkIfWaterlogged(Block block) {
+	public void checkIfWaterlogged(Block block) {
 		switch (block.getType()) {
 		case WALL_SIGN:
 		case OAK_TRAPDOOR:
@@ -348,15 +355,16 @@ public class PopulatorHandler {
 		case HORN_CORAL_WALL_FAN:
 		case CHEST:
 		case TRAPPED_CHEST:
-			if (block instanceof Waterlogged) {
-				BlockState state = block.getState();
-				Waterlogged waterlogged = (Waterlogged) state.getBlockData();
+			BlockData blockData = block.getBlockData();
+			if (blockData instanceof Waterlogged) {
+				Waterlogged waterlogged = (Waterlogged) blockData;
 				waterlogged.setWaterlogged(false);
+				BlockState state = block.getState();
 				state.setBlockData(waterlogged);
 				state.update(true, false);
 			}
 		default:
-			return block;
+			return;
 		}
 	}
 
