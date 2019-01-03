@@ -12,7 +12,7 @@ public class PolarPopulator extends BlockPopulator {
 
 	@Override
 	public void populate(World world, Random random, Chunk chunk) {
-		PolarPlugin.getInstance().getPopulatorHandler().handleChunk(world, chunk);
+		PolarPlugin.getInstance().getPopulatorHandler().handleChunk(world, random, chunk);
 	}
 
 }
