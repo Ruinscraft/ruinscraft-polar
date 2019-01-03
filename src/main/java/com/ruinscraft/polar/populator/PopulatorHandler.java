@@ -50,6 +50,7 @@ public class PopulatorHandler {
 		case GOLD_ORE:
 		case REDSTONE_ORE:
 		case EMERALD_ORE:
+		case LAPIS_ORE:
 			if (chance(50)) set(block, Material.COAL_ORE); 
 			else set(block, Material.STONE);
 			return;
@@ -252,13 +253,13 @@ public class PopulatorHandler {
 				if (block.getBiome() == Biome.BADLANDS) {
 					if (chanceOutOf(1, 40)) set(block, Material.GOLD_ORE);
 				}
-				if (chanceOutOf(1, 180)) set(block, Material.LAPIS_ORE);
+				if (chanceOutOf(1, 350)) set(block, Material.LAPIS_ORE);
 				if (block.getBiome() == Biome.MOUNTAINS ||
 						block.getBiome() == Biome.GRAVELLY_MOUNTAINS ||
 						block.getBiome() == Biome.MODIFIED_GRAVELLY_MOUNTAINS ||
 						block.getBiome() == Biome.WOODED_MOUNTAINS ||
 						block.getBiome() == Biome.MOUNTAIN_EDGE) {
-					if (chanceOutOf(1, 40)) set(block, Material.EMERALD_ORE);
+					if (chanceOutOf(1, 50)) set(block, Material.EMERALD_ORE);
 				}
 			}
 			if (block.getY() < 63) {
