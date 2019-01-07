@@ -30,7 +30,7 @@ public class PopulatorHandler {
 					} else {
 						handleNegativeBlock(block, random);
 						checkIfWaterlogged(block);
-						if (block.getY() == 0) block.setBiome(Biome.DESERT);
+						if (block.getY() == 215) block.setBiome(Biome.DESERT);
 					}
 				}
 			}
@@ -170,6 +170,7 @@ public class PopulatorHandler {
 		case BIRCH_LOG:
 		case JUNGLE_LOG:
 			if (chance(75, r)) set(block, Material.COBBLESTONE);
+			if (chance(40, r)) set(block, Material.MOSSY_COBBLESTONE);
 			return;
 		case SANDSTONE:
 			set(block, Material.RED_SANDSTONE);
@@ -181,16 +182,7 @@ public class PopulatorHandler {
 			set(block, Material.CUT_RED_SANDSTONE);
 			return;
 		case SANDSTONE_STAIRS:
-			Stairs stairs = (Stairs) block.getBlockData().clone();
-			BlockFace face = stairs.getFacing();
-			Half half = stairs.getHalf();
-			Stairs.Shape shape = stairs.getShape();
-			block.setType(Material.RED_SANDSTONE_STAIRS);
-			Stairs updatedStairs = (Stairs) block.getBlockData();
-			updatedStairs.setShape(shape);
-			updatedStairs.setFacing(face);
-			updatedStairs.setHalf(half);
-			block.setBlockData(updatedStairs);
+			setAndPreserveStair(block, Material.RED_SANDSTONE_STAIRS);
 			return;
 		case SANDSTONE_SLAB:
 			set(block, Material.RED_SANDSTONE_SLAB);
@@ -201,7 +193,7 @@ public class PopulatorHandler {
 		case BIRCH_PLANKS:
 		case JUNGLE_PLANKS:
 		case SPRUCE_PLANKS:
-			if (chance(6, r)) set(block, Material.FIRE);
+			if (chance(6, r) && block.getY() > 30) set(block, Material.FIRE);
 			else if (chance(60, r)) set(block, Material.AIR);
 			else if (chance(60, r)) set(block, Material.STONE);
 			return;
@@ -239,15 +231,16 @@ public class PopulatorHandler {
 		case STONE:
 			if (block.getY() < 14) {
 				if (chanceOutOf(1, 15000, r)) set(block, Material.GOLD_BLOCK);
-				if (chanceOutOf(1, 220, r)) set(block, Material.DIAMOND_ORE);
-				if (chanceOutOf(1, 120, r)) set(block, Material.GOLD_ORE);
+				if (chanceOutOf(1, 240, r)) set(block, Material.DIAMOND_ORE);
+				if (chanceOutOf(1, 160, r)) set(block, Material.GOLD_ORE);
+				if (chanceOutOf(1, 300, r)) set(block, Material.REDSTONE_ORE);
 			}
 			if (block.getY() < 34) {
-				if (chanceOutOf(1, 100, r)) set(block, Material.GOLD_ORE);
+				if (chanceOutOf(1, 120, r)) set(block, Material.GOLD_ORE);
 				if (block.getBiome() == Biome.BADLANDS) {
-					if (chanceOutOf(1, 40, r)) set(block, Material.GOLD_ORE);
+					if (chanceOutOf(1, 50, r)) set(block, Material.GOLD_ORE);
 				}
-				if (chanceOutOf(1, 350, r)) set(block, Material.LAPIS_ORE);
+				if (chanceOutOf(1, 500, r)) set(block, Material.LAPIS_ORE);
 				if (block.getBiome() == Biome.MOUNTAINS ||
 						block.getBiome() == Biome.GRAVELLY_MOUNTAINS ||
 						block.getBiome() == Biome.MODIFIED_GRAVELLY_MOUNTAINS ||
@@ -257,7 +250,7 @@ public class PopulatorHandler {
 				}
 			}
 			if (block.getY() < 63) {
-				if (chanceOutOf(1, 50, r)) set(block, Material.IRON_ORE);
+				if (chanceOutOf(1, 60, r)) set(block, Material.IRON_ORE);
 			}
 			if (chance(2, r)) set(block, Material.INFESTED_STONE);
 			return;
@@ -269,6 +262,19 @@ public class PopulatorHandler {
 	// sets the Material for the block
 	public void set(Block block, Material material) {
 		block.setType(material, false);
+	}
+
+	public void setAndPreserveStair(Block block, Material material) {
+		Stairs stairs = (Stairs) block.getBlockData().clone();
+		BlockFace face = stairs.getFacing();
+		Half half = stairs.getHalf();
+		Stairs.Shape shape = stairs.getShape();
+		block.setType(material);
+		Stairs updatedStairs = (Stairs) block.getBlockData();
+		updatedStairs.setShape(shape);
+		updatedStairs.setFacing(face);
+		updatedStairs.setHalf(half);
+		block.setBlockData(updatedStairs);
 	}
 
 	public void checkIfWaterlogged(Block block) {
