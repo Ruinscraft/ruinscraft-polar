@@ -17,18 +17,21 @@ import org.bukkit.block.data.type.Stairs;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.ruinscraft.polar.PolarPlugin;
+
 public class PopulatorHandler {
 
 	public void handleChunk(World world, Random random, Chunk chunk) {
+		double chanceMultiplier = 1 / (1 - (PolarPlugin.CHANCE_CONSTANT * Math.abs(chunk.getX())));
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
 				for (int y = 0; y < 216; y++) { // world shouldn't go above ~216 for y, right?
 					Block block = chunk.getBlock(x, y, z);
 
 					if (chunk.getX() >= 0) {
-						handlePositiveBlock(block, random);
+						handlePositiveBlock(block, random, chanceMultiplier);
 					} else {
-						handleNegativeBlock(block, random);
+						handleNegativeBlock(block, random, chanceMultiplier);
 						checkIfWaterlogged(block);
 						if (block.getY() == 215) block.setBiome(Biome.DESERT);
 					}
@@ -38,18 +41,18 @@ public class PopulatorHandler {
 	}
 
 	// handle blocks which on the good side
-	public void handlePositiveBlock(Block block, Random r) {
+	public void handlePositiveBlock(Block block, Random r, double c) {
 		switch (block.getType()) {
 		case DIAMOND_ORE:
 		case GOLD_ORE:
 		case REDSTONE_ORE:
 		case EMERALD_ORE:
 		case LAPIS_ORE:
-			if (chance(50, r)) set(block, Material.COAL_ORE); 
+			if (chance(50 * (1/c), r)) set(block, Material.COAL_ORE); 
 			else set(block, Material.STONE);
 			return;
 		case IRON_ORE:
-			if (chance(85, r)) set(block, Material.COAL_ORE);
+			if (chance(85 * (1/c), r)) set(block, Material.COAL_ORE);
 			return;
 		case LAVA:
 		case OBSIDIAN:
@@ -72,7 +75,7 @@ public class PopulatorHandler {
 	}
 
 	// handle blocks which are on the bad side
-	public void handleNegativeBlock(Block block, Random r) {
+	public void handleNegativeBlock(Block block, Random r, double c) {
 		switch (block.getType()) {
 		case DARK_OAK_LEAVES:
 		case ACACIA_LEAVES:
@@ -81,7 +84,7 @@ public class PopulatorHandler {
 		case JUNGLE_LEAVES:
 			set(block, Material.OAK_LEAVES);
 		case OAK_LEAVES:
-			if (chance(85, r)) set(block, Material.AIR);
+			if (chance(85 * c, r)) set(block, Material.AIR);
 			return;
 		case GRASS:
 		case TALL_GRASS:
@@ -169,8 +172,8 @@ public class PopulatorHandler {
 		case SPRUCE_LOG:
 		case BIRCH_LOG:
 		case JUNGLE_LOG:
-			if (chance(75, r)) set(block, Material.COBBLESTONE);
-			if (chance(40, r)) set(block, Material.MOSSY_COBBLESTONE);
+			if (chance(75 * c, r)) set(block, Material.COBBLESTONE);
+			if (chance(40 * c, r)) set(block, Material.MOSSY_COBBLESTONE);
 			return;
 		case SANDSTONE:
 			set(block, Material.RED_SANDSTONE);
@@ -193,9 +196,9 @@ public class PopulatorHandler {
 		case BIRCH_PLANKS:
 		case JUNGLE_PLANKS:
 		case SPRUCE_PLANKS:
-			if (chance(6, r) && block.getY() > 30) set(block, Material.FIRE);
-			else if (chance(60, r)) set(block, Material.AIR);
-			else if (chance(60, r)) set(block, Material.STONE);
+			if (chance(6 * c, r) && block.getY() > 30) set(block, Material.FIRE);
+			else if (chance(60 * c, r)) set(block, Material.AIR);
+			else if (chance(60 * c, r)) set(block, Material.STONE);
 			return;
 		case SNOW_BLOCK:
 			set(block, Material.STONE);
@@ -217,42 +220,42 @@ public class PopulatorHandler {
 			else set(block, Material.LAVA);
 			return;
 		case COBBLESTONE:
-			if (chance(25, r)) set(block, Material.MOSSY_COBBLESTONE);
-			if (chance(10, r)) set(block, Material.INFESTED_COBBLESTONE);
+			if (chance(25 * c, r)) set(block, Material.MOSSY_COBBLESTONE);
+			if (chance(10 * c, r)) set(block, Material.INFESTED_COBBLESTONE);
 			return;
 		case COBBLESTONE_WALL:
-			if (chance(25, r)) set(block, Material.MOSSY_COBBLESTONE_WALL);
+			if (chance(25 * c, r)) set(block, Material.MOSSY_COBBLESTONE_WALL);
 			return;
 		case STONE_BRICKS:
-			if (chance(25, r)) set(block, Material.MOSSY_STONE_BRICKS);
-			if (chance(10, r)) set(block, Material.INFESTED_STONE_BRICKS);
-			if (chance(7, r)) set(block, Material.INFESTED_MOSSY_STONE_BRICKS);
+			if (chance(25 * c, r)) set(block, Material.MOSSY_STONE_BRICKS);
+			if (chance(10 * c, r)) set(block, Material.INFESTED_STONE_BRICKS);
+			if (chance(7 * c, r)) set(block, Material.INFESTED_MOSSY_STONE_BRICKS);
 			return;
 		case STONE:
 			if (block.getY() < 14) {
-				if (chanceOutOf(1, 15000, r)) set(block, Material.GOLD_BLOCK);
-				if (chanceOutOf(1, 240, r)) set(block, Material.DIAMOND_ORE);
-				if (chanceOutOf(1, 160, r)) set(block, Material.GOLD_ORE);
-				if (chanceOutOf(1, 300, r)) set(block, Material.REDSTONE_ORE);
+				if (chanceOutOf(1 * (1/c), 15000, r)) set(block, Material.GOLD_BLOCK);
+				if (chanceOutOf(1 * (1/c), 240, r)) set(block, Material.DIAMOND_ORE);
+				if (chanceOutOf(1 * (1/c), 160, r)) set(block, Material.GOLD_ORE);
+				if (chanceOutOf(1 * (1/c), 300, r)) set(block, Material.REDSTONE_ORE);
 			}
 			if (block.getY() < 34) {
-				if (chanceOutOf(1, 120, r)) set(block, Material.GOLD_ORE);
+				if (chanceOutOf(1 * (1/c), 120, r)) set(block, Material.GOLD_ORE);
 				if (block.getBiome() == Biome.BADLANDS) {
-					if (chanceOutOf(1, 50, r)) set(block, Material.GOLD_ORE);
+					if (chanceOutOf(1 * (1/c), 50, r)) set(block, Material.GOLD_ORE);
 				}
-				if (chanceOutOf(1, 500, r)) set(block, Material.LAPIS_ORE);
+				if (chanceOutOf(1 * (1/c), 500, r)) set(block, Material.LAPIS_ORE);
 				if (block.getBiome() == Biome.MOUNTAINS ||
 						block.getBiome() == Biome.GRAVELLY_MOUNTAINS ||
 						block.getBiome() == Biome.MODIFIED_GRAVELLY_MOUNTAINS ||
 						block.getBiome() == Biome.WOODED_MOUNTAINS ||
 						block.getBiome() == Biome.MOUNTAIN_EDGE) {
-					if (chanceOutOf(1, 50, r)) set(block, Material.EMERALD_ORE);
+					if (chanceOutOf(1 * (1/c), 50, r)) set(block, Material.EMERALD_ORE);
 				}
 			}
 			if (block.getY() < 63) {
-				if (chanceOutOf(1, 60, r)) set(block, Material.IRON_ORE);
+				if (chanceOutOf(1 * (1/c), 60, r)) set(block, Material.IRON_ORE);
 			}
-			if (chance(2, r)) set(block, Material.INFESTED_STONE);
+			if (chance(2 * c, r)) set(block, Material.INFESTED_STONE);
 			return;
 		default:
 			return;
@@ -389,8 +392,17 @@ public class PopulatorHandler {
 	}
 
 	// chance out of 100
+	public boolean chance(double number, Random random) {
+		return chanceOutOf((int) number, 100, random);
+	}
+
+	// chance out of 100
 	public boolean chance(int number, Random random) {
 		return chanceOutOf(number, 100, random);
+	}
+
+	public boolean chanceOutOf(double number, int outOf, Random random) {
+		return chanceOutOf(number, outOf, random);
 	}
 
 	// chance out of any value

@@ -11,6 +11,8 @@ public class PolarPlugin extends JavaPlugin {
 
 	private PopulatorHandler populatorHandler;
 
+	public static final double CHANCE_CONSTANT = .000016D;
+
 	public static PolarPlugin getInstance() {
 		return instance;
 	}
