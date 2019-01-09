@@ -22,7 +22,7 @@ import com.ruinscraft.polar.PolarPlugin;
 public class PopulatorHandler {
 
 	public void handleChunk(World world, Random random, Chunk chunk) {
-		double chanceMultiplier = 1 / (1 - (PolarPlugin.CHANCE_CONSTANT * Math.abs(chunk.getX())));
+		double chanceMultiplier = 1 - (PolarPlugin.CHANCE_CONSTANT * Math.sqrt(Math.abs(chunk.getX())));
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
 				for (int y = 0; y < 216; y++) { // world shouldn't go above ~216 for y, right?
@@ -48,11 +48,12 @@ public class PopulatorHandler {
 		case REDSTONE_ORE:
 		case EMERALD_ORE:
 		case LAPIS_ORE:
-			if (chance(50 * (1/c), r)) set(block, Material.COAL_ORE); 
+			if (chance(50 * c, r)) set(block, Material.COAL_ORE); 
 			else set(block, Material.STONE);
 			return;
 		case IRON_ORE:
-			if (chance(85 * (1/c), r)) set(block, Material.COAL_ORE);
+			if (chance(85 * c, r)) set(block, Material.COAL_ORE);
+			else set(block, Material.STONE);
 			return;
 		case LAVA:
 		case OBSIDIAN:
@@ -65,8 +66,8 @@ public class PopulatorHandler {
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
 				ItemStack item = inventory.getItem(slot);
 				if (item == null) continue;
-				if (chance(50, r)) item.setType(Material.COAL);
-				else if (chance(50, r)) item.setType(Material.OAK_LOG);
+				if (chance(50 * c, r)) item.setType(Material.COAL);
+				else if (chance(50 * c, r)) item.setType(Material.OAK_LOG);
 				else item.setType(Material.DIRT);
 			}
 		default:
@@ -84,7 +85,7 @@ public class PopulatorHandler {
 		case JUNGLE_LEAVES:
 			set(block, Material.OAK_LEAVES);
 		case OAK_LEAVES:
-			if (chance(85 * c, r)) set(block, Material.AIR);
+			if (chance(85 * (1/c), r)) set(block, Material.AIR);
 			return;
 		case GRASS:
 		case TALL_GRASS:
@@ -172,8 +173,8 @@ public class PopulatorHandler {
 		case SPRUCE_LOG:
 		case BIRCH_LOG:
 		case JUNGLE_LOG:
-			if (chance(75 * c, r)) set(block, Material.COBBLESTONE);
-			if (chance(40 * c, r)) set(block, Material.MOSSY_COBBLESTONE);
+			if (chance(75 * (1/c), r)) set(block, Material.COBBLESTONE);
+			if (chance(40 * (1/c), r)) set(block, Material.MOSSY_COBBLESTONE);
 			return;
 		case SANDSTONE:
 			set(block, Material.RED_SANDSTONE);
@@ -196,9 +197,9 @@ public class PopulatorHandler {
 		case BIRCH_PLANKS:
 		case JUNGLE_PLANKS:
 		case SPRUCE_PLANKS:
-			if (chance(6 * c, r) && block.getY() > 30) set(block, Material.FIRE);
-			else if (chance(60 * c, r)) set(block, Material.AIR);
-			else if (chance(60 * c, r)) set(block, Material.STONE);
+			if (chance(6 * (1/c), r) && block.getY() > 30) set(block, Material.FIRE);
+			else if (chance(60 * (1/c), r)) set(block, Material.AIR);
+			else if (chance(60 * (1/c), r)) set(block, Material.STONE);
 			return;
 		case SNOW_BLOCK:
 			set(block, Material.STONE);
@@ -211,7 +212,7 @@ public class PopulatorHandler {
 				ItemStack item = inventory.getItem(slot);
 				if (item == null) continue;
 				if (item.getMaxStackSize() == 1) continue;
-				int randomInt = (int) (r.nextDouble() * 7);
+				int randomInt = (int) (r.nextDouble() * (7 * (1/c)));
 				item.setAmount(item.getAmount() + randomInt);
 			}
 			return;
@@ -220,16 +221,16 @@ public class PopulatorHandler {
 			else set(block, Material.LAVA);
 			return;
 		case COBBLESTONE:
-			if (chance(25 * c, r)) set(block, Material.MOSSY_COBBLESTONE);
-			if (chance(10 * c, r)) set(block, Material.INFESTED_COBBLESTONE);
+			if (chance(25 * (1/c), r)) set(block, Material.MOSSY_COBBLESTONE);
+			if (chance(10 * (1/c), r)) set(block, Material.INFESTED_COBBLESTONE);
 			return;
 		case COBBLESTONE_WALL:
-			if (chance(25 * c, r)) set(block, Material.MOSSY_COBBLESTONE_WALL);
+			if (chance(25 * (1/c), r)) set(block, Material.MOSSY_COBBLESTONE_WALL);
 			return;
 		case STONE_BRICKS:
-			if (chance(25 * c, r)) set(block, Material.MOSSY_STONE_BRICKS);
-			if (chance(10 * c, r)) set(block, Material.INFESTED_STONE_BRICKS);
-			if (chance(7 * c, r)) set(block, Material.INFESTED_MOSSY_STONE_BRICKS);
+			if (chance(25 * (1/c), r)) set(block, Material.MOSSY_STONE_BRICKS);
+			if (chance(10 * (1/c), r)) set(block, Material.INFESTED_STONE_BRICKS);
+			if (chance(7 * (1/c), r)) set(block, Material.INFESTED_MOSSY_STONE_BRICKS);
 			return;
 		case STONE:
 			if (block.getY() < 14) {
@@ -391,9 +392,8 @@ public class PopulatorHandler {
 		}
 	}
 
-	// chance out of 100
 	public boolean chance(double number, Random random) {
-		return chanceOutOf((int) number, 100, random);
+		return chanceOutOf(number, 100, random);
 	}
 
 	// chance out of 100
@@ -408,8 +408,9 @@ public class PopulatorHandler {
 	// chance out of any value
 	// ex. 20 out of 40 == 50% chance
 	public boolean chanceOutOf(int number, int outOf, Random random) {
+		if (number >= outOf) return true;
 		int nextInt = random.nextInt(outOf);
-		if (nextInt <= number) return true;
+		if (number >= nextInt) return true;
 		return false;
 	}
 
