@@ -402,7 +402,7 @@ public class PopulatorHandler {
 	}
 
 	public boolean chanceOutOf(double number, int outOf, Random random) {
-		return chanceOutOf(number, outOf, random);
+		return chanceOutOf((int) number, outOf, random);
 	}
 
 	// chance out of any value
