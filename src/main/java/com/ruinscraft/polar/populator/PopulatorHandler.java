@@ -197,9 +197,11 @@ public class PopulatorHandler {
 		case BIRCH_PLANKS:
 		case JUNGLE_PLANKS:
 		case SPRUCE_PLANKS:
-			if (chance(6 * (1/c), r) && block.getY() > 30) set(block, Material.FIRE);
+			if (chance(6 * (1/c), r) && block.getY() > 63) set(block, Material.FIRE);
+			else if (chance(2 * (1/c), r) && block.getY() > 30) set(block, Material.FIRE);
 			else if (chance(60 * (1/c), r)) set(block, Material.AIR);
 			else if (chance(60 * (1/c), r)) set(block, Material.STONE);
+			else if (chance(60 * (1/c), r)) set(block, Material.COBBLESTONE);
 			return;
 		case SNOW_BLOCK:
 			set(block, Material.STONE);

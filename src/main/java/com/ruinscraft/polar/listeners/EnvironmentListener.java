@@ -1,10 +1,7 @@
 package com.ruinscraft.polar.listeners;
 
-import java.util.concurrent.CompletableFuture;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Animals;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
@@ -29,20 +26,27 @@ public class EnvironmentListener implements Listener {
 		int x = event.getLocation().getBlockX();
 		LivingEntity livingEntity = event.getEntity();
 
-		if (event.getSpawnReason() == SpawnReason.CUSTOM) return;
+		if (event.getSpawnReason() == SpawnReason.CUSTOM) {
+			return;
+		}
 
-		if (livingEntity instanceof Monster && x >= 0) event.setCancelled(true);
-		if (livingEntity instanceof Animals && x < 0) event.setCancelled(true);
+		if (livingEntity instanceof Monster && x >= 0) {
+			event.setCancelled(true);
+			return;
+		} if (livingEntity instanceof Animals && x < 0) {
+			event.setCancelled(true);
+			return;
+		}
 
 		double spawnMore;
 		if (x >= 0) {
-			spawnMore = Math.sqrt(PolarPlugin.CHANCE_CONSTANT * (x/2));
+			spawnMore = Math.sqrt(PolarPlugin.CHANCE_CONSTANT * (x/4));
 		} else {
-			spawnMore = Math.sqrt(PolarPlugin.CHANCE_CONSTANT * (x/20));
+			spawnMore = Math.sqrt(PolarPlugin.CHANCE_CONSTANT * (Math.abs(x)/2)) + (Math.random() * 3);
 		}
 
 		if (spawnMore > 10) {
-			spawnMore = 10 + (spawnMore / 10);
+			spawnMore = 10 + (spawnMore / 100);
 		}
 
 		final int spawnMoreInt = (int) spawnMore;
