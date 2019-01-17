@@ -1,5 +1,7 @@
 package com.ruinscraft.polar;
 
+import java.util.Random;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.ruinscraft.polar.listeners.EnvironmentListener;
@@ -8,6 +10,7 @@ import com.ruinscraft.polar.populator.PopulatorHandler;
 public class PolarPlugin extends JavaPlugin {
 
 	private static PolarPlugin instance;
+	private static Random random;
 
 	private PopulatorHandler populatorHandler;
 
@@ -27,6 +30,10 @@ public class PolarPlugin extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		instance = null;
+	}
+
+	public static Random random() {
+		return random;
 	}
 
 	public PopulatorHandler getPopulatorHandler() {

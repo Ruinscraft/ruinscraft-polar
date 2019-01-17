@@ -12,6 +12,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.world.WorldInitEvent;
 
 import com.ruinscraft.polar.PolarPlugin;
+import com.ruinscraft.polar.populator.ChanceUtil;
 import com.ruinscraft.polar.populator.PolarPopulator;
 
 public class EnvironmentListener implements Listener {
@@ -47,6 +48,10 @@ public class EnvironmentListener implements Listener {
 
 		if (spawnMore > 10) {
 			spawnMore = 10 + (spawnMore / 100);
+		}
+
+		if (ChanceUtil.chanceOutOf(1, 200)) {
+			spawnMore = spawnMore + 25;
 		}
 
 		final int spawnMoreInt = (int) spawnMore;
