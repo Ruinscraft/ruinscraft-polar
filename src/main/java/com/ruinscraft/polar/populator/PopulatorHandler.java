@@ -218,6 +218,33 @@ public class PopulatorHandler {
 				item.setAmount(item.getAmount() + randomInt);
 			}
 			return;
+		case PRISMARINE:
+			if (chance(70 * (1/c))) set(block, Material.STONE);
+			else if (chance(50 * (1/c))) set(block, Material.COBBLESTONE);
+			else if (chance(10 * (1/c))) set(block, Material.GRAVEL);
+			else if (chance(10 * (1/c))) set(block, Material.AIR);
+			return;
+		case PRISMARINE_BRICKS:
+			if (chance(80 * (1/c))) set(block, Material.STONE_BRICKS);
+			else if (chance(60 * (1/c))) set(block, Material.POLISHED_ANDESITE);
+			else if (chance(10 * (1/c))) set(block, Material.AIR);
+			return;
+		case SEA_LANTERN:
+			if (chance(50 * (1/c))) set(block, Material.AIR);
+			else if (chance(60 * (1/c))) set(block, Material.GLOWSTONE);
+			else if (chance(20 * (1/c))) set(block, Material.GOLD_BLOCK);
+			else set(block, Material.AIR);
+			return;
+		case DARK_PRISMARINE:
+			if (chance(95 * (1/c))) set(block, Material.COAL_ORE);
+			else set(block, Material.STONE);
+			return;
+		case WET_SPONGE:
+			set(block, Material.SPONGE);
+			return;
+		case GOLD_BLOCK:
+			set(block, Material.DIAMOND_BLOCK);
+			return;
 		case WATER:
 			if (block.getY() < 64) set(block, Material.AIR);
 			else set(block, Material.LAVA);
