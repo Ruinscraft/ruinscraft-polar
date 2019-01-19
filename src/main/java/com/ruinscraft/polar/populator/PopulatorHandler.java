@@ -230,17 +230,17 @@ public class PopulatorHandler {
 			else if (chance(10 * (1/c))) set(block, Material.AIR);
 			return;
 		case SEA_LANTERN:
-			if (chance(50 * (1/c))) set(block, Material.AIR);
-			else if (chance(60 * (1/c))) set(block, Material.GLOWSTONE);
+			if (chance(30 * (1/c))) set(block, Material.AIR);
+			else if (chance(70 * (1/c))) set(block, Material.GLOWSTONE);
 			else if (chance(20 * (1/c))) set(block, Material.GOLD_BLOCK);
 			else set(block, Material.AIR);
 			return;
 		case DARK_PRISMARINE:
-			if (chance(95 * (1/c))) set(block, Material.COAL_ORE);
-			else set(block, Material.STONE);
+			set(block, Material.COAL_ORE);
 			return;
 		case WET_SPONGE:
-			set(block, Material.SPONGE);
+			if (chance(50 * c)) set(block, Material.SPONGE);
+			else set(block, Material.INFESTED_STONE);
 			return;
 		case GOLD_BLOCK:
 			set(block, Material.DIAMOND_BLOCK);

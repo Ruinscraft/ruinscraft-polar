@@ -23,6 +23,7 @@ public class PolarPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		instance = this;
+		random = new Random();
 		populatorHandler = new PopulatorHandler();
 		getServer().getPluginManager().registerEvents(new EnvironmentListener(), this);
 	}
