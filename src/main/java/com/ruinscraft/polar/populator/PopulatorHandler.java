@@ -11,6 +11,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.Bisected.Half;
+import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Stairs;
@@ -20,6 +21,14 @@ import org.bukkit.inventory.ItemStack;
 import com.ruinscraft.polar.PolarPlugin;
 
 public class PopulatorHandler {
+
+	private Material[] goodFoodItems = new Material[] {
+			Material.WHEAT, Material.APPLE, Material.MUSHROOM_STEW, Material.BREAD, Material.PORKCHOP, Material.COOKED_PORKCHOP,
+			Material.GOLDEN_APPLE, Material.ENCHANTED_GOLDEN_APPLE, Material.COD, Material.SALMON, Material.TROPICAL_FISH,
+			Material.PUFFERFISH, Material.COOKED_COD, Material.COOKED_SALMON, Material.CAKE, Material.COOKIE, Material.MELON_SLICE,
+			Material.DRIED_KELP, Material.BEEF, Material.COOKED_BEEF, Material.CHICKEN, Material.COOKED_CHICKEN,
+			Material.CARROT, Material.POTATO, Material.BAKED_POTATO, Material.PUMPKIN_PIE, Material.RABBIT, Material.COOKED_RABBIT,
+			Material.RABBIT_STEW, Material.MUTTON, Material.COOKED_MUTTON, Material.BEETROOT, Material.BEETROOT_SOUP};
 
 	public void handleChunk(World world, Chunk chunk) {
 		double chanceMultiplier = 1 - (PolarPlugin.CHANCE_CONSTANT * Math.sqrt(Math.abs(chunk.getX())));
@@ -85,7 +94,7 @@ public class PopulatorHandler {
 		case JUNGLE_LEAVES:
 			set(block, Material.OAK_LEAVES);
 		case OAK_LEAVES:
-			if (chance(85 * (1/c))) set(block, Material.AIR);
+			if (chance(95 * (1/c))) set(block, Material.AIR);
 			return;
 		case GRASS:
 		case TALL_GRASS:
@@ -186,7 +195,7 @@ public class PopulatorHandler {
 			set(block, Material.CUT_RED_SANDSTONE);
 			return;
 		case SANDSTONE_STAIRS:
-			setAndPreserveStair(block, Material.RED_SANDSTONE_STAIRS);
+			setStairAndPreserveState(block, Material.RED_SANDSTONE_STAIRS);
 			return;
 		case SANDSTONE_SLAB:
 			set(block, Material.RED_SANDSTONE_SLAB);
@@ -213,6 +222,14 @@ public class PopulatorHandler {
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
 				ItemStack item = inventory.getItem(slot);
 				if (item == null) continue;
+				boolean isFood = false;
+				for (Material food : this.goodFoodItems) {
+					if (item.getType() == food) {
+						isFood = true;
+						break;
+					}
+				}
+				if (isFood == true) item.setType(Material.IRON_INGOT);
 				if (item.getMaxStackSize() == 1) continue;
 				int randomInt = (int) (PolarPlugin.random().nextDouble() * (7 * (1/c)));
 				item.setAmount(item.getAmount() + randomInt);
@@ -245,8 +262,33 @@ public class PopulatorHandler {
 		case GOLD_BLOCK:
 			set(block, Material.DIAMOND_BLOCK);
 			return;
+		case LAVA:
+			if (block.getY() < 64) {
+				if (block.getX() == -0) {
+					if (block.getY() == 63) {
+						setStair(block, Material.COBBLESTONE_STAIRS, BlockFace.EAST, 
+								Bisected.Half.BOTTOM, Stairs.Shape.STRAIGHT, true);
+						return;
+					}
+					if (chance(80)) set(block, Material.STONE);
+					else set(block, Material.ANDESITE);
+					return;
+				}
+			}
+			return;
 		case WATER:
-			if (block.getY() < 64) set(block, Material.AIR);
+			if (block.getY() < 64) {
+				if (block.getX() == -0) {
+					if (block.getY() == 63) {
+						setStair(block, Material.COBBLESTONE_STAIRS, BlockFace.WEST, 
+								Bisected.Half.BOTTOM, Stairs.Shape.STRAIGHT, false);
+						return;
+					}
+					if (chance(80)) set(block, Material.STONE);
+					else set(block, Material.ANDESITE);
+					return;
+				} else set(block, Material.AIR);
+			}
 			else set(block, Material.LAVA);
 			return;
 		case COBBLESTONE:
@@ -285,7 +327,7 @@ public class PopulatorHandler {
 			if (block.getY() < 63) {
 				if (chanceOutOf(1 * (1/c), 60)) set(block, Material.IRON_ORE);
 			}
-			if (chance(2 * c)) set(block, Material.INFESTED_STONE);
+			if (chance(2 * (2/c))) set(block, Material.INFESTED_STONE);
 			return;
 		default:
 			return;
@@ -297,12 +339,24 @@ public class PopulatorHandler {
 		block.setType(material, false);
 	}
 
-	public void setAndPreserveStair(Block block, Material material) {
+	public void setStair(Block block, Material material, BlockFace face, Half half, Stairs.Shape shape, boolean waterlogged) {
+		if (!(block.getBlockData() instanceof Stairs)) return;
+		block.setType(material, false);
+		Stairs stairs = (Stairs) block.getBlockData();
+		stairs.setFacing(face);
+		stairs.setHalf(half);
+		stairs.setShape(shape);
+		stairs.setWaterlogged(waterlogged);
+		block.setBlockData(stairs);
+	}
+
+	public void setStairAndPreserveState(Block block, Material material) {
+		if (!(block.getBlockData() instanceof Stairs)) return;
 		Stairs stairs = (Stairs) block.getBlockData().clone();
 		BlockFace face = stairs.getFacing();
 		Half half = stairs.getHalf();
 		Stairs.Shape shape = stairs.getShape();
-		block.setType(material);
+		block.setType(material, false);
 		Stairs updatedStairs = (Stairs) block.getBlockData();
 		updatedStairs.setShape(shape);
 		updatedStairs.setFacing(face);
