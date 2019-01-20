@@ -34,7 +34,7 @@ public class PopulatorHandler {
 		double chanceMultiplier = 1 - (PolarPlugin.CHANCE_CONSTANT * Math.sqrt(Math.abs(chunk.getX())));
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
-				for (int y = 0; y < 216; y++) { // world shouldn't go above ~216 for y, right?
+				for (int y = 0; y < 256; y++) { // world shouldn't go above ~216 for y, right?
 					Block block = chunk.getBlock(x, y, z);
 
 					if (chunk.getX() >= 0) {
@@ -42,7 +42,7 @@ public class PopulatorHandler {
 					} else {
 						handleNegativeBlock(block, chanceMultiplier);
 						checkIfWaterlogged(block);
-						if (block.getY() == 215) block.setBiome(Biome.DESERT);
+						if (block.getY() == 255) block.setBiome(Biome.DESERT);
 					}
 				}
 			}
