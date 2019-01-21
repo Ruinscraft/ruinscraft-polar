@@ -38,9 +38,9 @@ public class PopulatorHandler {
 					Block block = chunk.getBlock(x, y, z);
 
 					if (chunk.getX() >= 0) {
-						handlePositiveBlock(block, chanceMultiplier);
+						handlePositive(block, chanceMultiplier);
 					} else {
-						handleNegativeBlock(block, chanceMultiplier);
+						handleNegative(block, chanceMultiplier);
 						checkIfWaterlogged(block);
 						if (block.getY() == 255) block.setBiome(Biome.DESERT);
 					}
@@ -50,7 +50,7 @@ public class PopulatorHandler {
 	}
 
 	// handle blocks which on the good side
-	public void handlePositiveBlock(Block block, double c) {
+	public void handlePositive(Block block, double c) {
 		switch (block.getType()) {
 		case DIAMOND_ORE:
 		case GOLD_ORE:
@@ -86,7 +86,7 @@ public class PopulatorHandler {
 	}
 
 	// handle blocks which are on the bad side
-	public void handleNegativeBlock(Block block, double c) {
+	public void handleNegative(Block block, double c) {
 		switch (block.getType()) {
 		case DARK_OAK_LEAVES:
 		case ACACIA_LEAVES:

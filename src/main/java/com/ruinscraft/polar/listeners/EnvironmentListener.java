@@ -1,6 +1,9 @@
 package com.ruinscraft.polar.listeners;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.World.Environment;
+import org.bukkit.WorldType;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Fish;
 import org.bukkit.entity.Golem;
@@ -14,6 +17,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.world.WorldInitEvent;
 
+import com.ruinscraft.polar.PlayerOverworldStatusUpdater;
 import com.ruinscraft.polar.PolarPlugin;
 import com.ruinscraft.polar.populator.ChanceUtil;
 import com.ruinscraft.polar.populator.PolarPopulator;
@@ -22,7 +26,13 @@ public class EnvironmentListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onWorldInit(WorldInitEvent event) {
-		event.getWorld().getPopulators().add(new PolarPopulator());
+		World world = event.getWorld();
+		if (world.getEnvironment() != Environment.NORMAL) return;
+
+		world.getPopulators().add(new PolarPopulator());
+
+		PolarPlugin.getInstance().getServer().getScheduler().runTaskTimer(
+				PolarPlugin.getInstance(), new PlayerOverworldStatusUpdater(event.getWorld()), 0, 100);
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
