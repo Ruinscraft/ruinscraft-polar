@@ -2,6 +2,7 @@ package com.ruinscraft.polar.playerstatus;
 
 import java.util.List;
 
+import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -29,11 +30,16 @@ public class PlayerOverworldStatusUpdater implements PlayerStatusUpdater, Runnab
 	}
 
 	public void handlePositive(Player player, double c) {
-		// do positive thingies
+		// do more positive thingies
+		player.resetPlayerWeather();
 	}
 
 	public void handleNegative(Player player, double c) {
-		// do negative thingies
+		player.setFoodLevel(player.getFoodLevel() - ((int) (.1/(Math.random() * c))));
+		player.setExhaustion(player.getExhaustion() + (float) (.8/c));
+		player.setPlayerWeather(WeatherType.DOWNFALL);
+		player.setSaturation(0);
+		player.setWalkSpeed(0.2F * (float) (c));
 	}
 
 	public World getWorld() {

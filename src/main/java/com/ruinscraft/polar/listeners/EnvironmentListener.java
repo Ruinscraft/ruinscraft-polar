@@ -3,12 +3,14 @@ package com.ruinscraft.polar.listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fish;
 import org.bukkit.entity.Golem;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
-import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -36,42 +38,42 @@ public class EnvironmentListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
-		int x = event.getLocation().getBlockX();
+		int x = event.getLocation().getChunk().getX();
+		double chanceMultiplier = 1 - (PolarPlugin.CHANCE_CONSTANT * Math.sqrt(Math.abs(x)));
+
 		LivingEntity livingEntity = event.getEntity();
 
 		if (event.getSpawnReason() == SpawnReason.CUSTOM) {
+			if (livingEntity instanceof Monster) {
+				handleMonster((Monster) livingEntity, chanceMultiplier);
+			}
 			return;
 		}
 
 		if (x >= 0) {
-			if (livingEntity instanceof Monster) {
+			if (livingEntity instanceof Monster || 
+					livingEntity.getType() == EntityType.SLIME) {
 				event.setCancelled(true);
 				return;
 			}
 		} else if (x < 0) {
-			if (livingEntity instanceof Animals) {
-				event.setCancelled(true);
-				return;
-			} else if (livingEntity instanceof Villager ||
+			if (livingEntity instanceof Animals ||
+					livingEntity.getType() == EntityType.VILLAGER ||
 					livingEntity instanceof Fish ||
 					livingEntity instanceof Golem) {
 				event.setCancelled(true);
 				return;
 			}
-		}
-		if (livingEntity instanceof Monster && x >= 0) {
-			event.setCancelled(true);
-			return;
-		} if (livingEntity instanceof Animals && x < 0) {
-			event.setCancelled(true);
-			return;
+			if (livingEntity instanceof Monster) {
+				handleMonster((Monster) livingEntity, chanceMultiplier);
+			}
 		}
 
 		double spawnMore;
 		if (x >= 0) {
-			spawnMore = Math.sqrt(PolarPlugin.CHANCE_CONSTANT * (x/4));
+			spawnMore = Math.sqrt(PolarPlugin.CHANCE_CONSTANT * (x * 4));
 		} else {
-			spawnMore = Math.sqrt(PolarPlugin.CHANCE_CONSTANT * (Math.abs(x)/2)) + (Math.random() * 3);
+			spawnMore = Math.sqrt(PolarPlugin.CHANCE_CONSTANT * (Math.abs(x) * 8)) + (Math.random() * 3);
 		}
 
 		if (spawnMore > 10) {
@@ -82,12 +84,54 @@ public class EnvironmentListener implements Listener {
 			spawnMore = spawnMore + 25;
 		}
 
+		if (spawnMore > 50) spawnMore = 50;
+
 		final int spawnMoreInt = (int) spawnMore;
 		Bukkit.getScheduler().runTask(PolarPlugin.getInstance(), () -> {
 			for (int i = 0; i < spawnMoreInt; i++) {
 				event.getLocation().getWorld().spawnEntity(event.getLocation(), livingEntity.getType());
 			}
 		});
+	}
+
+	public void handleMonster(Monster monster, double c) {
+		monster.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(monster.getAttribute
+				(Attribute.GENERIC_MAX_HEALTH).getBaseValue() * (1.5/c));
+		monster.setHealth(monster.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+		if (monster.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED) != null) {
+			PolarPlugin.log("Base: " + monster.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue());
+			monster.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(monster.getAttribute
+					(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() * (1.3/c));
+			PolarPlugin.log("Base after: " + monster.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue());
+		} 
+		if (monster.getAttribute(Attribute.GENERIC_FOLLOW_RANGE) != null) {
+			monster.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(monster.getAttribute
+					(Attribute.GENERIC_FOLLOW_RANGE).getBaseValue() * (1.5/c));
+		} 
+		if (monster.getAttribute(Attribute.GENERIC_ARMOR) != null) {
+			monster.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(monster.getAttribute
+					(Attribute.GENERIC_ARMOR).getBaseValue() * (1.5/c));
+		} 
+		if (monster.getAttribute(Attribute.GENERIC_ATTACK_SPEED) != null) {
+			monster.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(monster.getAttribute
+					(Attribute.GENERIC_ATTACK_SPEED).getBaseValue() * (1/c));
+		} 
+		if (monster.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE) != null) {
+			monster.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(monster.getAttribute
+					(Attribute.GENERIC_KNOCKBACK_RESISTANCE).getBaseValue() * (1/c));
+		}
+
+		if (monster.getType() == EntityType.CREEPER) {
+			Creeper creeper = (Creeper) monster;
+			creeper.setExplosionRadius(creeper.getExplosionRadius() + (int) (2/c));
+			creeper.setMaxFuseTicks((int) (creeper.getMaxFuseTicks() * (.6 * c)));
+		} else if (monster.getType() == EntityType.PHANTOM) {
+			monster.getAttribute(Attribute.GENERIC_FLYING_SPEED).setBaseValue(monster.getAttribute
+					(Attribute.GENERIC_FLYING_SPEED).getDefaultValue() * (1.2/c));
+		} else if (monster.getType() == EntityType.HUSK) {
+			monster.getAttribute(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS).setBaseValue(monster.getAttribute
+					(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS).getDefaultValue() * (3/c));
+		}
 	}
 
 }

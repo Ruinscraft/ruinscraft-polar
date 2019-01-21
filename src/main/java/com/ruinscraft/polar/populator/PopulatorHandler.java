@@ -398,7 +398,7 @@ public class PopulatorHandler {
 			if (block.getY() < 63) {
 				if (chanceOutOf(1 * (1/c), 60)) set(block, Material.IRON_ORE);
 			}
-			if (chance(2 * (2/c))) set(block, Material.INFESTED_STONE);
+			if (chance(2 * (.8/c))) set(block, Material.INFESTED_STONE);
 			return;
 		default:
 			return;
