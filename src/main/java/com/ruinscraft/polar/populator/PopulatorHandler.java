@@ -107,8 +107,6 @@ public class PopulatorHandler {
 		case FROSTED_ICE:
 		case PACKED_ICE:
 		case VINE:
-		case SEAGRASS:
-		case TALL_SEAGRASS:
 		case SUGAR_CANE:
 		case CACTUS:
 		case MELON:
@@ -128,9 +126,6 @@ public class PopulatorHandler {
 		case LILAC:
 		case ROSE_BUSH:
 		case LILY_PAD:
-		case SEA_PICKLE:
-		case KELP_PLANT:
-		case KELP:
 		case POTATOES:
 		case CARROTS:
 		case BEETROOTS:
@@ -327,27 +322,23 @@ public class PopulatorHandler {
 		case GOLD_BLOCK:
 			set(block, Material.DIAMOND_BLOCK);
 			return;
-		case LAVA:
-			if (block.getY() < 64) {
-				if (block.getX() == -1) {
-					if (block.getY() == 63) {
-						setStair(block, Material.COBBLESTONE_STAIRS, BlockFace.EAST, 
-								Bisected.Half.BOTTOM, Stairs.Shape.STRAIGHT, true);
-						return;
-					}
-					if (chance(80)) set(block, Material.STONE);
-					else set(block, Material.ANDESITE);
-					return;
-				}
+		case SEAGRASS:
+		case TALL_SEAGRASS:
+		case SEA_PICKLE:
+		case KELP_PLANT:
+		case KELP:
+			if (block.getX() == -1) {
+				set(block, Material.WATER);
+			} else {
+				set(block, Material.AIR);
+				return;
 			}
-			return;
 		case WATER:
 			if (block.getY() < 64) {
 				if (block.getX() == -1) {
-					PolarPlugin.log("cool!");
-					if (block.getY() == 63) {
-						setStair(block, Material.COBBLESTONE_STAIRS, BlockFace.WEST, 
-								Bisected.Half.BOTTOM, Stairs.Shape.STRAIGHT, false);
+					if (block.getY() == 62) {
+						setStair(block, Material.COBBLESTONE_STAIRS, BlockFace.EAST, 
+								Bisected.Half.BOTTOM, Stairs.Shape.STRAIGHT, true);
 						return;
 					}
 					if (chance(80)) set(block, Material.STONE);
@@ -356,6 +347,20 @@ public class PopulatorHandler {
 				} else set(block, Material.AIR);
 			}
 			else set(block, Material.LAVA);
+			return;
+		case LAVA:
+			if (block.getY() < 64) {
+				if (block.getX() == -1) {
+					if (block.getY() == 62) {
+						setStair(block, Material.COBBLESTONE_STAIRS, BlockFace.WEST, 
+								Bisected.Half.BOTTOM, Stairs.Shape.STRAIGHT, true);
+						return;
+					}
+					if (chance(80)) set(block, Material.STONE);
+					else set(block, Material.ANDESITE);
+					return;
+				}
+			}
 			return;
 		case COBBLESTONE:
 			if (chance(25 * (1/c))) set(block, Material.MOSSY_COBBLESTONE);
@@ -405,29 +410,24 @@ public class PopulatorHandler {
 		block.setType(material, false);
 	}
 
-	public void setStair(Block block, Material material, BlockFace face, Half half, Stairs.Shape shape, boolean waterlogged) {
-		if (!(block.getBlockData() instanceof Stairs)) return;
-		block.setType(material, false);
-		Stairs stairs = (Stairs) block.getBlockData();
-		stairs.setFacing(face);
-		stairs.setHalf(half);
-		stairs.setShape(shape);
-		stairs.setWaterlogged(waterlogged);
-		block.setBlockData(stairs);
-	}
-
 	public void setStairAndPreserveState(Block block, Material material) {
 		if (!(block.getBlockData() instanceof Stairs)) return;
 		Stairs stairs = (Stairs) block.getBlockData().clone();
 		BlockFace face = stairs.getFacing();
 		Half half = stairs.getHalf();
 		Stairs.Shape shape = stairs.getShape();
+		boolean waterlogged = stairs.isWaterlogged();
+		setStair(block, material, face, half, shape, waterlogged);
+	}
+
+	public void setStair(Block block, Material material, BlockFace face, Half half, Stairs.Shape shape, boolean waterlogged) {
 		block.setType(material, false);
-		Stairs updatedStairs = (Stairs) block.getBlockData();
-		updatedStairs.setShape(shape);
-		updatedStairs.setFacing(face);
-		updatedStairs.setHalf(half);
-		block.setBlockData(updatedStairs);
+		Stairs stairs = (Stairs) block.getBlockData();
+		stairs.setShape(shape);
+		stairs.setFacing(face);
+		stairs.setHalf(half);
+		stairs.setWaterlogged(waterlogged);
+		block.setBlockData(stairs);
 	}
 
 	public void checkIfWaterlogged(Block block) {
@@ -446,6 +446,7 @@ public class PopulatorHandler {
 		case STONE_BRICK_STAIRS:
 		case NETHER_BRICK_STAIRS:
 		case SANDSTONE_STAIRS:
+		case RED_SANDSTONE_STAIRS:
 		case SPRUCE_STAIRS:
 		case BIRCH_STAIRS:
 		case JUNGLE_STAIRS:
