@@ -1,12 +1,13 @@
-package com.ruinscraft.polar;
+package com.ruinscraft.polar.playerstatus;
 
 import java.util.List;
 
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-public class PlayerOverworldStatusUpdater implements Runnable {
+import com.ruinscraft.polar.PolarPlugin;
+
+public class PlayerOverworldStatusUpdater implements PlayerStatusUpdater, Runnable {
 
 	private World overworld;
 
@@ -19,10 +20,10 @@ public class PlayerOverworldStatusUpdater implements Runnable {
 		List<Player> players = overworld.getPlayers();
 
 		for (Player player : players) {
-			Location location = player.getLocation();
-			double chanceMultiplier = 1 - (PolarPlugin.CHANCE_CONSTANT * Math.sqrt(Math.abs(location.getX())));
+			int x = player.getLocation().getBlockX();
+			double chanceMultiplier = 1 - (PolarPlugin.CHANCE_CONSTANT * Math.sqrt(Math.abs(x)));
 
-			if (location.getBlockX() >= 0) handlePositive(player, chanceMultiplier);
+			if (x >= 0) handlePositive(player, chanceMultiplier);
 			else handleNegative(player, chanceMultiplier);
 		}
 	}
@@ -33,6 +34,10 @@ public class PlayerOverworldStatusUpdater implements Runnable {
 
 	public void handleNegative(Player player, double c) {
 		// do negative thingies
+	}
+
+	public World getWorld() {
+		return this.overworld;
 	}
 
 }
