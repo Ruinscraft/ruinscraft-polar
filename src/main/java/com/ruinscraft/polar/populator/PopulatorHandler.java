@@ -66,6 +66,7 @@ public class PopulatorHandler {
 			return;
 		case LAVA:
 		case OBSIDIAN:
+		case MAGMA_BLOCK:
 			set(block, Material.WATER);
 			return;
 		case TRAPPED_CHEST:
@@ -126,31 +127,75 @@ public class PopulatorHandler {
 		case PEONY:
 		case LILAC:
 		case ROSE_BUSH:
-		case TUBE_CORAL:
-		case BRAIN_CORAL:
-		case BUBBLE_CORAL:
-		case FIRE_CORAL:
-		case HORN_CORAL:
-		case TUBE_CORAL_BLOCK:
-		case BRAIN_CORAL_BLOCK:
-		case BUBBLE_CORAL_BLOCK:
-		case FIRE_CORAL_BLOCK:
-		case HORN_CORAL_BLOCK:
-		case TUBE_CORAL_FAN:
-		case BRAIN_CORAL_FAN:
-		case BUBBLE_CORAL_FAN:
-		case FIRE_CORAL_FAN:
-		case HORN_CORAL_FAN:
-		case TUBE_CORAL_WALL_FAN:
-		case BRAIN_CORAL_WALL_FAN:
-		case BUBBLE_CORAL_WALL_FAN:
-		case FIRE_CORAL_WALL_FAN:
-		case HORN_CORAL_WALL_FAN:
 		case LILY_PAD:
 		case SEA_PICKLE:
 		case KELP_PLANT:
 		case KELP:
+		case POTATOES:
+		case CARROTS:
+		case BEETROOTS:
+		case WHEAT:
 			set(block, Material.AIR);
+			return;
+		case TUBE_CORAL:
+			set(block, Material.DEAD_TUBE_CORAL);
+			return;
+		case BRAIN_CORAL:
+			set(block, Material.DEAD_BRAIN_CORAL);
+			return;
+		case BUBBLE_CORAL:
+			set(block, Material.DEAD_BUBBLE_CORAL);
+			return;
+		case FIRE_CORAL:
+			set(block, Material.DEAD_FIRE_CORAL);
+			return;
+		case HORN_CORAL:
+			set(block, Material.DEAD_HORN_CORAL);
+			return;
+		case TUBE_CORAL_BLOCK:
+			set(block, Material.DEAD_TUBE_CORAL_BLOCK);
+			return;
+		case BRAIN_CORAL_BLOCK:
+			set(block, Material.DEAD_BRAIN_CORAL_BLOCK);
+			return;
+		case BUBBLE_CORAL_BLOCK:
+			set(block, Material.DEAD_BUBBLE_CORAL_BLOCK);
+			return;
+		case FIRE_CORAL_BLOCK:
+			set(block, Material.DEAD_FIRE_CORAL_BLOCK);
+			return;
+		case HORN_CORAL_BLOCK:
+			set(block, Material.DEAD_HORN_CORAL_BLOCK);
+			return;
+		case TUBE_CORAL_FAN:
+			set(block, Material.DEAD_TUBE_CORAL_FAN);
+			return;
+		case BRAIN_CORAL_FAN:
+			set(block, Material.DEAD_BRAIN_CORAL_FAN);
+			return;
+		case BUBBLE_CORAL_FAN:
+			set(block, Material.DEAD_BUBBLE_CORAL_FAN);
+			return;
+		case FIRE_CORAL_FAN:
+			set(block, Material.DEAD_FIRE_CORAL_FAN);
+			return;
+		case HORN_CORAL_FAN:
+			set(block, Material.DEAD_HORN_CORAL_FAN);
+			return;
+		case TUBE_CORAL_WALL_FAN:
+			set(block, Material.DEAD_TUBE_CORAL_WALL_FAN);
+			return;
+		case BRAIN_CORAL_WALL_FAN:
+			set(block, Material.DEAD_BRAIN_CORAL_WALL_FAN);
+			return;
+		case BUBBLE_CORAL_WALL_FAN:
+			set(block, Material.DEAD_BUBBLE_CORAL_WALL_FAN);
+			return;
+		case FIRE_CORAL_WALL_FAN:
+			set(block, Material.DEAD_FIRE_CORAL_WALL_FAN);
+			return;
+		case HORN_CORAL_WALL_FAN:
+			set(block, Material.DEAD_HORN_CORAL_WALL_FAN);
 			return;
 		case GRAVEL:
 		case CLAY:
@@ -172,6 +217,10 @@ public class PopulatorHandler {
 			} else {
 				set(block, Material.COBBLESTONE);
 			}
+			return;
+		case FARMLAND:
+			if (chance(80)) set(block, Material.COAL_ORE);
+			else set(block, Material.STONE);
 			return;
 		case RED_MUSHROOM_BLOCK:
 		case BROWN_MUSHROOM_BLOCK:
@@ -199,6 +248,22 @@ public class PopulatorHandler {
 			return;
 		case SANDSTONE_SLAB:
 			set(block, Material.RED_SANDSTONE_SLAB);
+			return;
+		case STONE_BRICK_STAIRS:
+		case BRICK_STAIRS:
+		case COBBLESTONE_STAIRS:
+		case OAK_STAIRS:
+		case DARK_OAK_STAIRS:
+		case ACACIA_STAIRS:
+		case QUARTZ_STAIRS:
+		case JUNGLE_STAIRS:
+		case BIRCH_STAIRS:
+		case SPRUCE_STAIRS:
+		case DARK_PRISMARINE_STAIRS:
+		case PRISMARINE_BRICK_STAIRS:
+		case PRISMARINE_STAIRS:
+			if (chance(50)) setStairAndPreserveState(block, Material.COBBLESTONE_STAIRS);
+			else if (chance(40)) setStairAndPreserveState(block, Material.STONE_BRICK_STAIRS);
 			return;
 		case OAK_PLANKS:
 		case DARK_OAK_PLANKS:
@@ -264,7 +329,7 @@ public class PopulatorHandler {
 			return;
 		case LAVA:
 			if (block.getY() < 64) {
-				if (block.getX() == -0) {
+				if (block.getX() == -1) {
 					if (block.getY() == 63) {
 						setStair(block, Material.COBBLESTONE_STAIRS, BlockFace.EAST, 
 								Bisected.Half.BOTTOM, Stairs.Shape.STRAIGHT, true);
@@ -278,7 +343,8 @@ public class PopulatorHandler {
 			return;
 		case WATER:
 			if (block.getY() < 64) {
-				if (block.getX() == -0) {
+				if (block.getX() == -1) {
+					PolarPlugin.log("cool!");
 					if (block.getY() == 63) {
 						setStair(block, Material.COBBLESTONE_STAIRS, BlockFace.WEST, 
 								Bisected.Half.BOTTOM, Stairs.Shape.STRAIGHT, false);
@@ -445,6 +511,16 @@ public class PopulatorHandler {
 		case MOSSY_COBBLESTONE_WALL:
 		case IRON_BARS:
 		case ENDER_CHEST:
+		case TUBE_CORAL:
+		case BRAIN_CORAL:
+		case BUBBLE_CORAL:
+		case FIRE_CORAL:
+		case HORN_CORAL:
+		case DEAD_TUBE_CORAL:
+		case DEAD_BRAIN_CORAL:
+		case DEAD_BUBBLE_CORAL:
+		case DEAD_FIRE_CORAL:
+		case DEAD_HORN_CORAL:
 		case TUBE_CORAL_FAN:
 		case BRAIN_CORAL_FAN:
 		case BUBBLE_CORAL_FAN:
@@ -460,6 +536,11 @@ public class PopulatorHandler {
 		case BUBBLE_CORAL_WALL_FAN:
 		case FIRE_CORAL_WALL_FAN:
 		case HORN_CORAL_WALL_FAN:
+		case DEAD_TUBE_CORAL_WALL_FAN:
+		case DEAD_BRAIN_CORAL_WALL_FAN:
+		case DEAD_BUBBLE_CORAL_WALL_FAN:
+		case DEAD_FIRE_CORAL_WALL_FAN:
+		case DEAD_HORN_CORAL_WALL_FAN:
 		case CHEST:
 		case TRAPPED_CHEST:
 			BlockData blockData = block.getBlockData();

@@ -2,13 +2,17 @@ package com.ruinscraft.polar.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.Fish;
+import org.bukkit.entity.Golem;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.world.WorldInitEvent;
 
 import com.ruinscraft.polar.PolarPlugin;
@@ -31,6 +35,22 @@ public class EnvironmentListener implements Listener {
 			return;
 		}
 
+		if (x >= 0) {
+			if (livingEntity instanceof Monster) {
+				event.setCancelled(true);
+				return;
+			}
+		} else if (x < 0) {
+			if (livingEntity instanceof Animals) {
+				event.setCancelled(true);
+				return;
+			} else if (livingEntity instanceof Villager ||
+					livingEntity instanceof Fish ||
+					livingEntity instanceof Golem) {
+				event.setCancelled(true);
+				return;
+			}
+		}
 		if (livingEntity instanceof Monster && x >= 0) {
 			event.setCancelled(true);
 			return;
