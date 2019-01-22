@@ -99,10 +99,8 @@ public class EnvironmentListener implements Listener {
 				(Attribute.GENERIC_MAX_HEALTH).getBaseValue() * (1.5/c));
 		monster.setHealth(monster.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
 		if (monster.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED) != null) {
-			PolarPlugin.log("Base: " + monster.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue());
 			monster.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(monster.getAttribute
 					(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() * (1.3/c));
-			PolarPlugin.log("Base after: " + monster.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue());
 		} 
 		if (monster.getAttribute(Attribute.GENERIC_FOLLOW_RANGE) != null) {
 			monster.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(monster.getAttribute
