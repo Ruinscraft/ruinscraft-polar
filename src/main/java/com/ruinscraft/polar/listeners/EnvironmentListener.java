@@ -42,8 +42,8 @@ public class EnvironmentListener implements Listener {
 		double chanceMultiplier = 1 - (PolarPlugin.CHANCE_CONSTANT * Math.sqrt(Math.abs(x)));
 
 		LivingEntity livingEntity = event.getEntity();
-
 		SpawnReason reason = event.getSpawnReason();
+
 		if (reason == SpawnReason.CUSTOM ||
 				reason == SpawnReason.REINFORCEMENTS ||
 				reason == SpawnReason.JOCKEY ||
@@ -57,7 +57,7 @@ public class EnvironmentListener implements Listener {
 		} else if (reason != SpawnReason.SPAWNER &&
 				reason != SpawnReason.NATURAL && 
 				reason != SpawnReason.CHUNK_GEN) {
-			
+			return;
 		}
 
 		if (x >= 0) {
