@@ -15,6 +15,7 @@ import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Stairs;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -76,6 +77,17 @@ public class PopulatorHandler {
 			for (int slot = 0; slot < inventory.getSize(); slot++) {
 				ItemStack item = inventory.getItem(slot);
 				if (item == null) continue;
+
+				boolean continueBecauseFood = false;
+				for (Material food : goodFoodItems) {
+					if (item.getType() == food) continueBecauseFood = true;
+				}
+				if (continueBecauseFood) continue;
+
+				for (Enchantment enchantment : item.getEnchantments().keySet()) {
+					item.removeEnchantment(enchantment);
+				}
+
 				if (chance(50 * c)) item.setType(Material.COAL);
 				else if (chance(50 * c)) item.setType(Material.OAK_LOG);
 				else item.setType(Material.DIRT);

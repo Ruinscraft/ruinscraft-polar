@@ -43,7 +43,9 @@ public class EnvironmentListener implements Listener {
 
 		LivingEntity livingEntity = event.getEntity();
 
-		if (event.getSpawnReason() == SpawnReason.CUSTOM) {
+		if (event.getSpawnReason() == SpawnReason.SLIME_SPLIT) {
+			return;
+		} else if (event.getSpawnReason() == SpawnReason.CUSTOM) {
 			if (livingEntity instanceof Monster) {
 				handleMonster((Monster) livingEntity, chanceMultiplier);
 			}
@@ -51,8 +53,7 @@ public class EnvironmentListener implements Listener {
 		}
 
 		if (x >= 0) {
-			if (livingEntity instanceof Monster || 
-					livingEntity.getType() == EntityType.SLIME) {
+			if (livingEntity instanceof Monster) {
 				event.setCancelled(true);
 				return;
 			}
@@ -100,23 +101,23 @@ public class EnvironmentListener implements Listener {
 		monster.setHealth(monster.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
 		if (monster.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED) != null) {
 			monster.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(monster.getAttribute
-					(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() * (1.3/c));
-		} 
+					(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() * (1.1/(c*c)));
+		}
 		if (monster.getAttribute(Attribute.GENERIC_FOLLOW_RANGE) != null) {
 			monster.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(monster.getAttribute
 					(Attribute.GENERIC_FOLLOW_RANGE).getBaseValue() * (1.5/c));
-		} 
+		}
 		if (monster.getAttribute(Attribute.GENERIC_ARMOR) != null) {
 			monster.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(monster.getAttribute
 					(Attribute.GENERIC_ARMOR).getBaseValue() * (1.5/c));
-		} 
+		}
 		if (monster.getAttribute(Attribute.GENERIC_ATTACK_SPEED) != null) {
 			monster.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(monster.getAttribute
 					(Attribute.GENERIC_ATTACK_SPEED).getBaseValue() * (1/c));
-		} 
+		}
 		if (monster.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE) != null) {
 			monster.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(monster.getAttribute
-					(Attribute.GENERIC_KNOCKBACK_RESISTANCE).getBaseValue() * (1/c));
+					(Attribute.GENERIC_KNOCKBACK_RESISTANCE).getBaseValue() * (1.3/c));
 		}
 
 		if (monster.getType() == EntityType.CREEPER) {
@@ -128,7 +129,7 @@ public class EnvironmentListener implements Listener {
 					(Attribute.GENERIC_FLYING_SPEED).getDefaultValue() * (1.2/c));
 		} else if (monster.getType() == EntityType.HUSK) {
 			monster.getAttribute(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS).setBaseValue(monster.getAttribute
-					(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS).getDefaultValue() * (3/c));
+					(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS).getDefaultValue() * (5/c));
 		}
 	}
 
