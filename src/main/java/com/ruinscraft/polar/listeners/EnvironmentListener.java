@@ -43,9 +43,8 @@ public class EnvironmentListener implements Listener {
 
 		LivingEntity livingEntity = event.getEntity();
 
-		if (event.getSpawnReason() == SpawnReason.SLIME_SPLIT) {
-			return;
-		} else if (event.getSpawnReason() == SpawnReason.CUSTOM) {
+		if (event.getSpawnReason() == SpawnReason.SLIME_SPLIT) return;
+		else if (event.getSpawnReason() == SpawnReason.CUSTOM) {
 			if (livingEntity instanceof Monster) {
 				handleMonster((Monster) livingEntity, chanceMultiplier);
 			}
@@ -59,9 +58,10 @@ public class EnvironmentListener implements Listener {
 			}
 		} else if (x < 0) {
 			if (livingEntity instanceof Animals ||
-					livingEntity.getType() == EntityType.VILLAGER ||
 					livingEntity instanceof Fish ||
-					livingEntity instanceof Golem) {
+					livingEntity instanceof Golem ||
+					livingEntity.getType() == EntityType.SLIME ||
+					livingEntity.getType() == EntityType.VILLAGER) {
 				event.setCancelled(true);
 				return;
 			}
