@@ -43,12 +43,21 @@ public class EnvironmentListener implements Listener {
 
 		LivingEntity livingEntity = event.getEntity();
 
-		if (event.getSpawnReason() == SpawnReason.SLIME_SPLIT) return;
-		else if (event.getSpawnReason() == SpawnReason.CUSTOM) {
+		SpawnReason reason = event.getSpawnReason();
+		if (reason == SpawnReason.CUSTOM ||
+				reason == SpawnReason.REINFORCEMENTS ||
+				reason == SpawnReason.JOCKEY ||
+				reason == SpawnReason.VILLAGE_INVASION ||
+				reason == SpawnReason.SILVERFISH_BLOCK ||
+				reason == SpawnReason.MOUNT) {
 			if (livingEntity instanceof Monster) {
 				handleMonster((Monster) livingEntity, chanceMultiplier);
 			}
 			return;
+		} else if (reason != SpawnReason.SPAWNER &&
+				reason != SpawnReason.NATURAL && 
+				reason != SpawnReason.CHUNK_GEN) {
+			
 		}
 
 		if (x >= 0) {

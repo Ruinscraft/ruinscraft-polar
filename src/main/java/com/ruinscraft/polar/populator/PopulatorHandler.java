@@ -443,129 +443,13 @@ public class PopulatorHandler {
 	}
 
 	public void checkIfWaterlogged(Block block) {
-		switch (block.getType()) {
-		case WALL_SIGN:
-		case OAK_TRAPDOOR:
-		case ACACIA_TRAPDOOR:
-		case BIRCH_TRAPDOOR:
-		case SPRUCE_TRAPDOOR:
-		case DARK_OAK_TRAPDOOR:
-		case JUNGLE_TRAPDOOR:
-		case PURPUR_STAIRS:
-		case OAK_STAIRS:
-		case COBBLESTONE_STAIRS:
-		case BRICK_STAIRS:
-		case STONE_BRICK_STAIRS:
-		case NETHER_BRICK_STAIRS:
-		case SANDSTONE_STAIRS:
-		case RED_SANDSTONE_STAIRS:
-		case SPRUCE_STAIRS:
-		case BIRCH_STAIRS:
-		case JUNGLE_STAIRS:
-		case QUARTZ_STAIRS:
-		case ACACIA_STAIRS:
-		case DARK_OAK_STAIRS:
-		case PRISMARINE_STAIRS:
-		case PRISMARINE_BRICK_STAIRS:
-		case DARK_PRISMARINE_STAIRS:
-		case OAK_SLAB:
-		case SPRUCE_SLAB:
-		case BIRCH_SLAB:
-		case JUNGLE_SLAB:
-		case ACACIA_SLAB:
-		case DARK_OAK_SLAB:
-		case STONE_SLAB:
-		case SANDSTONE_SLAB:
-		case PETRIFIED_OAK_SLAB:
-		case COBBLESTONE_SLAB:
-		case BRICK_SLAB:
-		case STONE_BRICK_SLAB:
-		case NETHER_BRICK_SLAB:
-		case QUARTZ_SLAB:
-		case RED_SANDSTONE_SLAB:
-		case PURPUR_SLAB:
-		case PRISMARINE_SLAB:
-		case PRISMARINE_BRICK_SLAB:
-		case DARK_PRISMARINE_SLAB:
-		case SIGN:
-		case SEA_PICKLE:
-		case LADDER:
-		case GLASS_PANE:
-		case WHITE_STAINED_GLASS_PANE:
-		case ORANGE_STAINED_GLASS_PANE:
-		case MAGENTA_STAINED_GLASS_PANE:
-		case LIGHT_BLUE_STAINED_GLASS_PANE:
-		case YELLOW_STAINED_GLASS_PANE:
-		case LIME_STAINED_GLASS_PANE:
-		case PINK_STAINED_GLASS_PANE:
-		case GRAY_STAINED_GLASS_PANE:
-		case LIGHT_GRAY_STAINED_GLASS_PANE:
-		case CYAN_STAINED_GLASS_PANE:
-		case PURPLE_STAINED_GLASS_PANE:
-		case BLUE_STAINED_GLASS_PANE:
-		case BROWN_STAINED_GLASS_PANE:
-		case GREEN_STAINED_GLASS_PANE:
-		case RED_STAINED_GLASS_PANE:
-		case BLACK_STAINED_GLASS_PANE:
-		case OAK_FENCE:
-		case OAK_FENCE_GATE:
-		case ACACIA_FENCE:
-		case ACACIA_FENCE_GATE:
-		case SPRUCE_FENCE:
-		case SPRUCE_FENCE_GATE:
-		case BIRCH_FENCE:
-		case BIRCH_FENCE_GATE:
-		case JUNGLE_FENCE:
-		case JUNGLE_FENCE_GATE:
-		case DARK_OAK_FENCE:
-		case DARK_OAK_FENCE_GATE:
-		case NETHER_BRICK_FENCE:
-		case COBBLESTONE_WALL:
-		case MOSSY_COBBLESTONE_WALL:
-		case IRON_BARS:
-		case ENDER_CHEST:
-		case TUBE_CORAL:
-		case BRAIN_CORAL:
-		case BUBBLE_CORAL:
-		case FIRE_CORAL:
-		case HORN_CORAL:
-		case DEAD_TUBE_CORAL:
-		case DEAD_BRAIN_CORAL:
-		case DEAD_BUBBLE_CORAL:
-		case DEAD_FIRE_CORAL:
-		case DEAD_HORN_CORAL:
-		case TUBE_CORAL_FAN:
-		case BRAIN_CORAL_FAN:
-		case BUBBLE_CORAL_FAN:
-		case FIRE_CORAL_FAN:
-		case HORN_CORAL_FAN:
-		case DEAD_TUBE_CORAL_FAN:
-		case DEAD_BRAIN_CORAL_FAN:
-		case DEAD_BUBBLE_CORAL_FAN:
-		case DEAD_FIRE_CORAL_FAN:
-		case DEAD_HORN_CORAL_FAN:
-		case TUBE_CORAL_WALL_FAN:
-		case BRAIN_CORAL_WALL_FAN:
-		case BUBBLE_CORAL_WALL_FAN:
-		case FIRE_CORAL_WALL_FAN:
-		case HORN_CORAL_WALL_FAN:
-		case DEAD_TUBE_CORAL_WALL_FAN:
-		case DEAD_BRAIN_CORAL_WALL_FAN:
-		case DEAD_BUBBLE_CORAL_WALL_FAN:
-		case DEAD_FIRE_CORAL_WALL_FAN:
-		case DEAD_HORN_CORAL_WALL_FAN:
-		case CHEST:
-		case TRAPPED_CHEST:
-			BlockData blockData = block.getBlockData();
-			if (blockData instanceof Waterlogged) {
-				Waterlogged waterlogged = (Waterlogged) blockData;
-				waterlogged.setWaterlogged(false);
-				BlockState state = block.getState();
-				state.setBlockData(waterlogged);
-				state.update(true, false);
-			}
-		default:
-			return;
+		BlockData blockData = block.getBlockData();
+		if (blockData instanceof Waterlogged) {
+			Waterlogged waterlogged = (Waterlogged) blockData;
+			waterlogged.setWaterlogged(false);
+			BlockState state = block.getState();
+			state.setBlockData(waterlogged);
+			state.update(true, false);
 		}
 	}
 
