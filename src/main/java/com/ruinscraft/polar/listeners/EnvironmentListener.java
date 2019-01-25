@@ -28,12 +28,12 @@ public class EnvironmentListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onWorldInit(WorldInitEvent event) {
 		World world = event.getWorld();
-		if (world.getEnvironment() != Environment.NORMAL) return;
 
-		world.getPopulators().add(new PolarPopulator());
-
-		PolarPlugin.getInstance().getServer().getScheduler().runTaskTimer(
-				PolarPlugin.getInstance(), new PlayerOverworldStatusUpdater(event.getWorld()), 0, 100);
+		if (world.getEnvironment() == Environment.NORMAL) {
+			world.getPopulators().add(new PolarPopulator());
+			PolarPlugin.getInstance().getServer().getScheduler().runTaskTimer(
+					PolarPlugin.getInstance(), new PlayerOverworldStatusUpdater(event.getWorld()), 0, 100);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
