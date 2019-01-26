@@ -70,6 +70,9 @@ public class PopulatorHandler {
 		case MAGMA_BLOCK:
 			set(block, Material.WATER);
 			return;
+		case SPAWNER:
+			set(block, Material.COAL_BLOCK);
+			return;
 		case TRAPPED_CHEST:
 		case CHEST:
 			Chest chest = (Chest) block.getState();
