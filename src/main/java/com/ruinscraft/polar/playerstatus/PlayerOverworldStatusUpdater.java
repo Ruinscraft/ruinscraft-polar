@@ -34,7 +34,7 @@ public class PlayerOverworldStatusUpdater implements PlayerStatusUpdater, Runnab
 	@Override
 	public void handlePositive(Player player, double c) {
 		if (player.getLocation().getBlock().getBiome() == Biome.FLOWER_FOREST) {
-			if (ChanceUtil.chance(15) && player.getFoodLevel() < 20) {
+			if (ChanceUtil.chance(25) && player.getFoodLevel() < 20) {
 				player.setFoodLevel(player.getFoodLevel() + 1);
 				player.setSaturation(player.getSaturation() * 2);
 			}

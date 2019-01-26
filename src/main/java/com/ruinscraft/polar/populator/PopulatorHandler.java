@@ -212,6 +212,11 @@ public class PopulatorHandler {
 			} else if (block.getY() > 45) {
 				if (chance(50)) set(block, Material.DIRT);
 			}
+		case MYCELIUM:
+			if (chance(50) && block.getY() > 66) return;
+			else if (chance(25) && block.getY() > 63 && block.getY() <= 66) return;
+			else if (chance(15) && block.getY() > 61 && block.getY() <= 63) return;
+			else set(block, Material.GRASS_BLOCK);
 		case GRASS_BLOCK:
 		case DIRT:
 		case GRASS_PATH:
@@ -285,7 +290,11 @@ public class PopulatorHandler {
 			else if (chance(60 * (1/c))) set(block, Material.COBBLESTONE);
 			return;
 		case SNOW_BLOCK:
-			set(block, Material.STONE);
+			Biome biome = block.getBiome();
+			if (biome == Biome.FROZEN_OCEAN || 
+					biome == Biome.DEEP_FROZEN_OCEAN) {
+				set(block, Material.AIR);
+			} else set(block, Material.STONE);
 			return;
 		case TRAPPED_CHEST:
 		case CHEST:

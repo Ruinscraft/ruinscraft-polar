@@ -48,7 +48,6 @@ public class EnvironmentListener implements Listener {
 				reason == SpawnReason.REINFORCEMENTS ||
 				reason == SpawnReason.JOCKEY ||
 				reason == SpawnReason.VILLAGE_INVASION ||
-				reason == SpawnReason.SILVERFISH_BLOCK ||
 				reason == SpawnReason.MOUNT) {
 			if (livingEntity instanceof Monster) {
 				handleMonster((Monster) livingEntity, chanceMultiplier);
@@ -110,11 +109,11 @@ public class EnvironmentListener implements Listener {
 		monster.setHealth(monster.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
 		if (monster.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED) != null) {
 			monster.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(monster.getAttribute
-					(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() * (1.1/(c*c)));
+					(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() * (1.25/(c*c)));
 		}
 		if (monster.getAttribute(Attribute.GENERIC_FOLLOW_RANGE) != null) {
 			monster.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(monster.getAttribute
-					(Attribute.GENERIC_FOLLOW_RANGE).getBaseValue() * (1.5/c));
+					(Attribute.GENERIC_FOLLOW_RANGE).getBaseValue() * (1.7/c));
 		}
 		if (monster.getAttribute(Attribute.GENERIC_ARMOR) != null) {
 			monster.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(monster.getAttribute
@@ -122,7 +121,7 @@ public class EnvironmentListener implements Listener {
 		}
 		if (monster.getAttribute(Attribute.GENERIC_ATTACK_SPEED) != null) {
 			monster.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(monster.getAttribute
-					(Attribute.GENERIC_ATTACK_SPEED).getBaseValue() * (1/c));
+					(Attribute.GENERIC_ATTACK_SPEED).getBaseValue() * (1.2/c));
 		}
 		if (monster.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE) != null) {
 			monster.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(monster.getAttribute
@@ -132,11 +131,11 @@ public class EnvironmentListener implements Listener {
 		if (monster.getType() == EntityType.CREEPER) {
 			Creeper creeper = (Creeper) monster;
 			creeper.setExplosionRadius(creeper.getExplosionRadius() + (int) (2/c));
-			creeper.setMaxFuseTicks((int) (creeper.getMaxFuseTicks() * (.6 * c)));
+			creeper.setMaxFuseTicks((int) (creeper.getMaxFuseTicks() * (.5 * c)));
 		} else if (monster.getType() == EntityType.PHANTOM) {
 			monster.getAttribute(Attribute.GENERIC_FLYING_SPEED).setBaseValue(monster.getAttribute
 					(Attribute.GENERIC_FLYING_SPEED).getDefaultValue() * (1.2/c));
-		} else if (monster.getType() == EntityType.HUSK) {
+		} else if (monster.getType() == EntityType.HUSK || monster.getType() == EntityType.ZOMBIE) {
 			monster.getAttribute(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS).setBaseValue(monster.getAttribute
 					(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS).getDefaultValue() * (5/c));
 		}
