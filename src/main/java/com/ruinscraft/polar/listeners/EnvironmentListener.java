@@ -39,7 +39,6 @@ public class EnvironmentListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerItemDamage(PlayerItemDamageEvent event) {
-		PolarPlugin.log("yep dude: " +  event.getDamage());
 		int x = event.getPlayer().getLocation().getBlockX();
 		double c = .5 - Math.abs(PolarPlugin.CHANCE_CONSTANT * (x/30));
 		if (c < .025) c = .025;
@@ -47,9 +46,6 @@ public class EnvironmentListener implements Listener {
 
 		int damage = event.getDamage() * (int) (1 / (c));
 		event.setDamage(damage);
-
-		PolarPlugin.log("NOW look: " + damage);
-		PolarPlugin.log("It's " + event.getDamage());
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
