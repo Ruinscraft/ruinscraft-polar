@@ -16,6 +16,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.world.WorldInitEvent;
 
@@ -49,6 +51,13 @@ public class EnvironmentListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
+	public void onEntityDamage(EntityDamageEvent event) {
+		int x = event.getEntity().getLocation().getBlockX();
+		if (x < 0) return;
+		if (event.getCause() == DamageCause.STARVATION) event.setCancelled(true);
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 		int x = event.getLocation().getChunk().getX();
 		double chanceMultiplier = PolarPlugin.instance().getChanceFromX(x);
@@ -66,8 +75,9 @@ public class EnvironmentListener implements Listener {
 			}
 			return;
 		} else if (reason != SpawnReason.SPAWNER &&
-				reason != SpawnReason.NATURAL && 
-				reason != SpawnReason.CHUNK_GEN) {
+				reason != SpawnReason.NATURAL &&
+				reason != SpawnReason.CHUNK_GEN &&
+				reason != SpawnReason.SILVERFISH_BLOCK) {
 			return;
 		}
 
