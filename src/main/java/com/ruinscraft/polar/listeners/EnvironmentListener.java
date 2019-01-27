@@ -39,11 +39,17 @@ public class EnvironmentListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerItemDamage(PlayerItemDamageEvent event) {
+		PolarPlugin.log("yep dude: " +  event.getDamage());
 		int x = event.getPlayer().getLocation().getBlockX();
-		double c = Math.abs(1 - (PolarPlugin.CHANCE_CONSTANT * (x/25)));
-		if (c < .05) c = .05;
+		double c = .5 - Math.abs(PolarPlugin.CHANCE_CONSTANT * (x/30));
+		if (c < .025) c = .025;
 		if (x >= 0) return;
-		event.setDamage(event.getDamage() * (int) (1 / (c / 2)));
+
+		int damage = event.getDamage() * (int) (1 / (c));
+		event.setDamage(damage);
+
+		PolarPlugin.log("NOW look: " + damage);
+		PolarPlugin.log("It's " + event.getDamage());
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -119,7 +125,7 @@ public class EnvironmentListener implements Listener {
 		monster.setHealth(monster.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
 		if (monster.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED) != null) {
 			monster.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(monster.getAttribute
-					(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() * (1.25/(c*c)));
+					(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() * (1.4/(c*c)));
 		}
 		if (monster.getAttribute(Attribute.GENERIC_FOLLOW_RANGE) != null) {
 			monster.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(monster.getAttribute

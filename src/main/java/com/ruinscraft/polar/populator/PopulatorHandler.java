@@ -207,19 +207,19 @@ public class PopulatorHandler {
 		case HORN_CORAL_WALL_FAN:
 			set(block, Material.DEAD_HORN_CORAL_WALL_FAN);
 			return;
-		case GRAVEL:
-		case CLAY:
-		case SAND:
-			if (block.getY() > 50) {
-				set(block, Material.DIRT);
-			} else if (block.getY() > 45) {
-				if (chance(50)) set(block, Material.DIRT);
-			}
 		case MYCELIUM:
 			if (chance(50) && block.getY() > 66) return;
 			else if (chance(25) && block.getY() > 63 && block.getY() <= 66) return;
 			else if (chance(15) && block.getY() > 61 && block.getY() <= 63) return;
 			else set(block, Material.GRASS_BLOCK);
+		case GRAVEL:
+		case CLAY:
+		case SAND:
+			if (block.getY() > 50 && block.getType() != Material.GRASS_BLOCK) {
+				set(block, Material.DIRT);
+			} else if (block.getY() > 45 && block.getType() != Material.GRASS_BLOCK) {
+				if (chance(50)) set(block, Material.DIRT);
+			}
 		case GRASS_BLOCK:
 		case DIRT:
 		case GRASS_PATH:
