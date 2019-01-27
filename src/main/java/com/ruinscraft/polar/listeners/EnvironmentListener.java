@@ -16,6 +16,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.world.WorldInitEvent;
 
 import com.ruinscraft.polar.playerstatus.PlayerOverworldStatusUpdater;
@@ -31,15 +32,24 @@ public class EnvironmentListener implements Listener {
 
 		if (world.getEnvironment() == Environment.NORMAL) {
 			world.getPopulators().add(new PolarPopulator());
-			PolarPlugin.getInstance().getServer().getScheduler().runTaskTimer(
-					PolarPlugin.getInstance(), new PlayerOverworldStatusUpdater(event.getWorld()), 0, 100);
+			PolarPlugin.instance().getServer().getScheduler().runTaskTimer(
+					PolarPlugin.instance(), new PlayerOverworldStatusUpdater(event.getWorld()), 0, 100);
 		}
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerItemDamage(PlayerItemDamageEvent event) {
+		int x = event.getPlayer().getLocation().getBlockX();
+		double c = Math.abs(1 - (PolarPlugin.CHANCE_CONSTANT * (x/25)));
+		if (c < .05) c = .05;
+		if (x >= 0) return;
+		event.setDamage(event.getDamage() * (int) (1 / (c / 2)));
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 		int x = event.getLocation().getChunk().getX();
-		double chanceMultiplier = 1 - (PolarPlugin.CHANCE_CONSTANT * Math.sqrt(Math.abs(x)));
+		double chanceMultiplier = PolarPlugin.instance().getChanceFromX(x);
 
 		LivingEntity livingEntity = event.getEntity();
 		SpawnReason reason = event.getSpawnReason();
@@ -96,7 +106,7 @@ public class EnvironmentListener implements Listener {
 		if (spawnMore > 50) spawnMore = 50;
 
 		final int spawnMoreInt = (int) spawnMore;
-		Bukkit.getScheduler().runTask(PolarPlugin.getInstance(), () -> {
+		Bukkit.getScheduler().runTask(PolarPlugin.instance(), () -> {
 			for (int i = 0; i < spawnMoreInt; i++) {
 				event.getLocation().getWorld().spawnEntity(event.getLocation(), livingEntity.getType());
 			}

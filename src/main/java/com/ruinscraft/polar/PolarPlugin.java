@@ -16,7 +16,7 @@ public class PolarPlugin extends JavaPlugin {
 
 	public static final double CHANCE_CONSTANT = .002D;
 
-	public static PolarPlugin getInstance() {
+	public static PolarPlugin instance() {
 		return instance;
 	}
 
@@ -43,6 +43,10 @@ public class PolarPlugin extends JavaPlugin {
 
 	public static void log(String message) {
 		instance.getLogger().info(message);
+	}
+
+	public double getChanceFromX(int x) {
+		return 1 - (PolarPlugin.CHANCE_CONSTANT * Math.sqrt(Math.abs(x)));
 	}
 
 }
