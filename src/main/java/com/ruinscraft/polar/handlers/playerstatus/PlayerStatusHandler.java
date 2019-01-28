@@ -1,14 +1,12 @@
-package com.ruinscraft.polar.playerstatus;
+package com.ruinscraft.polar.handlers.playerstatus;
 
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 
-public interface PlayerStatusUpdater {
+import com.ruinscraft.polar.handlers.PolarHandler;
 
-	void handlePositive(Player player, double c);
-
-	void handleNegative(Player player, double c);
+public interface PlayerStatusHandler extends PolarHandler<Player> {
 
 	World getWorld();
 

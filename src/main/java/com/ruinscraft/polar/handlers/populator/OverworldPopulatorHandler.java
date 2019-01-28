@@ -1,6 +1,9 @@
-package com.ruinscraft.polar.populator;
+package com.ruinscraft.polar.handlers.populator;
 
-import static com.ruinscraft.polar.populator.ChanceUtil.*;
+import static com.ruinscraft.polar.util.ChanceUtil.*;
+import static com.ruinscraft.polar.util.BlockUtil.*;
+
+import java.util.Random;
 
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -8,20 +11,22 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
-import org.bukkit.block.data.Bisected.Half;
 import org.bukkit.block.data.Bisected;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Stairs;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.generator.BlockPopulator;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.ruinscraft.polar.PolarPlugin;
 
-public class PopulatorHandler {
+public class OverworldPopulatorHandler extends BlockPopulator implements PopulatorHandler {
+
+	@Override
+	public void populate(World world, Random random, Chunk chunk) {
+		handleChunk(world, chunk);
+	}
 
 	private Material[] goodFoodItems = new Material[] {
 			Material.WHEAT, Material.APPLE, Material.MUSHROOM_STEW, Material.BREAD, Material.PORKCHOP, Material.COOKED_PORKCHOP,
@@ -31,6 +36,7 @@ public class PopulatorHandler {
 			Material.CARROT, Material.POTATO, Material.BAKED_POTATO, Material.PUMPKIN_PIE, Material.RABBIT, Material.COOKED_RABBIT,
 			Material.RABBIT_STEW, Material.MUTTON, Material.COOKED_MUTTON, Material.BEETROOT, Material.BEETROOT_SOUP};
 
+	@Override
 	public void handleChunk(World world, Chunk chunk) {
 		double chanceMultiplier = PolarPlugin.instance().getChanceFromX(chunk.getX());
 		for (int x = 0; x < 16; x++) {
@@ -42,7 +48,7 @@ public class PopulatorHandler {
 						handlePositive(block, chanceMultiplier);
 					} else {
 						handleNegative(block, chanceMultiplier);
-						checkIfWaterlogged(block);
+						removeWaterlog(block);
 						if (block.getY() == 255) block.setBiome(Biome.DESERT);
 					}
 				}
@@ -51,6 +57,7 @@ public class PopulatorHandler {
 	}
 
 	// handle blocks which on the good side
+	@Override
 	public void handlePositive(Block block, double c) {
 		switch (block.getType()) {
 		case DIAMOND_ORE:
@@ -101,6 +108,7 @@ public class PopulatorHandler {
 	}
 
 	// handle blocks which are on the bad side
+	@Override
 	public void handleNegative(Block block, double c) {
 		switch (block.getType()) {
 		case DARK_OAK_LEAVES:
@@ -426,42 +434,6 @@ public class PopulatorHandler {
 			return;
 		default:
 			return;
-		}
-	}
-
-	// sets the Material for the block
-	public void set(Block block, Material material) {
-		block.setType(material, false);
-	}
-
-	public void setStairAndPreserveState(Block block, Material material) {
-		if (!(block.getBlockData() instanceof Stairs)) return;
-		Stairs stairs = (Stairs) block.getBlockData().clone();
-		BlockFace face = stairs.getFacing();
-		Half half = stairs.getHalf();
-		Stairs.Shape shape = stairs.getShape();
-		boolean waterlogged = stairs.isWaterlogged();
-		setStair(block, material, face, half, shape, waterlogged);
-	}
-
-	public void setStair(Block block, Material material, BlockFace face, Half half, Stairs.Shape shape, boolean waterlogged) {
-		block.setType(material, false);
-		Stairs stairs = (Stairs) block.getBlockData();
-		stairs.setShape(shape);
-		stairs.setFacing(face);
-		stairs.setHalf(half);
-		stairs.setWaterlogged(waterlogged);
-		block.setBlockData(stairs);
-	}
-
-	public void checkIfWaterlogged(Block block) {
-		BlockData blockData = block.getBlockData();
-		if (blockData instanceof Waterlogged) {
-			Waterlogged waterlogged = (Waterlogged) blockData;
-			waterlogged.setWaterlogged(false);
-			BlockState state = block.getState();
-			state.setBlockData(waterlogged);
-			state.update(true, false);
 		}
 	}
 

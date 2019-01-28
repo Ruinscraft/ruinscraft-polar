@@ -1,4 +1,4 @@
-package com.ruinscraft.polar.listeners;
+package com.ruinscraft.polar;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -14,6 +14,7 @@ import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -21,10 +22,9 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.world.WorldInitEvent;
 
-import com.ruinscraft.polar.playerstatus.PlayerOverworldStatusUpdater;
-import com.ruinscraft.polar.PolarPlugin;
-import com.ruinscraft.polar.populator.ChanceUtil;
-import com.ruinscraft.polar.populator.PolarPopulator;
+import com.ruinscraft.polar.handlers.playerstatus.PlayerOverworldStatusHandler;
+import com.ruinscraft.polar.handlers.populator.OverworldPopulatorHandler;
+import com.ruinscraft.polar.util.ChanceUtil;
 
 public class EnvironmentListener implements Listener {
 
@@ -33,9 +33,9 @@ public class EnvironmentListener implements Listener {
 		World world = event.getWorld();
 
 		if (world.getEnvironment() == Environment.NORMAL) {
-			world.getPopulators().add(new PolarPopulator());
+			world.getPopulators().add(new OverworldPopulatorHandler());
 			PolarPlugin.instance().getServer().getScheduler().runTaskTimer(
-					PolarPlugin.instance(), new PlayerOverworldStatusUpdater(event.getWorld()), 0, 100);
+					PolarPlugin.instance(), new PlayerOverworldStatusHandler(event.getWorld()), 0, 100);
 		}
 	}
 
@@ -55,6 +55,11 @@ public class EnvironmentListener implements Listener {
 		int x = event.getEntity().getLocation().getBlockX();
 		if (x < 0) return;
 		if (event.getCause() == DamageCause.STARVATION) event.setCancelled(true);
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onBlockBreak(BlockBreakEvent event) {
+		// do stuff
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)

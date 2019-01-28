@@ -1,4 +1,4 @@
-package com.ruinscraft.polar.playerstatus;
+package com.ruinscraft.polar.handlers.playerstatus;
 
 import java.util.List;
 
@@ -8,13 +8,13 @@ import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 
 import com.ruinscraft.polar.PolarPlugin;
-import com.ruinscraft.polar.populator.ChanceUtil;
+import com.ruinscraft.polar.util.ChanceUtil;
 
-public class PlayerOverworldStatusUpdater implements PlayerStatusUpdater, Runnable {
+public class PlayerOverworldStatusHandler implements PlayerStatusHandler, Runnable {
 
 	private World overworld;
 
-	public PlayerOverworldStatusUpdater(World overworld) {
+	public PlayerOverworldStatusHandler(World overworld) {
 		this.overworld = overworld;
 	}
 

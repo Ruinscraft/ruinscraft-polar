@@ -1,4 +1,4 @@
-package com.ruinscraft.polar.populator;
+package com.ruinscraft.polar.util;
 
 import com.ruinscraft.polar.PolarPlugin;
 
