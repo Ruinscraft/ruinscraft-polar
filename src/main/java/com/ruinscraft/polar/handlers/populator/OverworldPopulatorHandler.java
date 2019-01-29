@@ -332,6 +332,7 @@ public class OverworldPopulatorHandler extends BlockPopulator implements Populat
 			else if (chance(50 * (1/c))) set(block, Material.COBBLESTONE);
 			else if (chance(10 * (1/c))) set(block, Material.GRAVEL);
 			else if (chance(10 * (1/c))) set(block, Material.AIR);
+			else if (chance(20 * (1/c))) set(block, Material.DIAMOND_ORE);
 			return;
 		case PRISMARINE_BRICKS:
 			if (chance(80 * (1/c))) set(block, Material.STONE_BRICKS);

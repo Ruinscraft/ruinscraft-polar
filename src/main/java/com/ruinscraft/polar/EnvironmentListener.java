@@ -22,7 +22,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.world.WorldInitEvent;
 
-import com.ruinscraft.polar.handlers.playerstatus.PlayerOverworldStatusHandler;
+import com.ruinscraft.polar.handlers.playerstatus.OverworldPlayerStatusHandler;
 import com.ruinscraft.polar.handlers.populator.OverworldPopulatorHandler;
 import com.ruinscraft.polar.util.ChanceUtil;
 
@@ -35,14 +35,14 @@ public class EnvironmentListener implements Listener {
 		if (world.getEnvironment() == Environment.NORMAL) {
 			world.getPopulators().add(new OverworldPopulatorHandler());
 			PolarPlugin.instance().getServer().getScheduler().runTaskTimer(
-					PolarPlugin.instance(), new PlayerOverworldStatusHandler(event.getWorld()), 0, 100);
+					PolarPlugin.instance(), new OverworldPlayerStatusHandler(event.getWorld()), 0, 100);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerItemDamage(PlayerItemDamageEvent event) {
 		int x = event.getPlayer().getLocation().getBlockX();
-		double c = .5 - Math.abs(PolarPlugin.CHANCE_CONSTANT * (x/30));
+		double c = .7 - Math.abs(PolarPlugin.CHANCE_CONSTANT * (x/30));
 		if (c < .025) c = .025;
 		if (x >= 0) return;
 
@@ -109,7 +109,7 @@ public class EnvironmentListener implements Listener {
 		if (x >= 0) {
 			spawnMore = Math.sqrt(PolarPlugin.CHANCE_CONSTANT * (x * 4));
 		} else {
-			spawnMore = Math.sqrt(PolarPlugin.CHANCE_CONSTANT * (Math.abs(x) * 8)) + (Math.random() * 3);
+			spawnMore = Math.sqrt(PolarPlugin.CHANCE_CONSTANT * (Math.abs(x) * 6)) + (Math.random() * 3);
 		}
 
 		if (spawnMore > 10) {

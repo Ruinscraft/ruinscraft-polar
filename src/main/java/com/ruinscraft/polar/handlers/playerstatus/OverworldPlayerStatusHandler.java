@@ -10,11 +10,11 @@ import org.bukkit.entity.Player;
 import com.ruinscraft.polar.PolarPlugin;
 import com.ruinscraft.polar.util.ChanceUtil;
 
-public class PlayerOverworldStatusHandler implements PlayerStatusHandler, Runnable {
+public class OverworldPlayerStatusHandler implements PlayerStatusHandler, Runnable {
 
 	private World overworld;
 
-	public PlayerOverworldStatusHandler(World overworld) {
+	public OverworldPlayerStatusHandler(World overworld) {
 		this.overworld = overworld;
 	}
 
