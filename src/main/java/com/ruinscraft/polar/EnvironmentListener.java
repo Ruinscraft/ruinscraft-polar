@@ -59,7 +59,7 @@ public class EnvironmentListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onBlockBreak(BlockBreakEvent event) {
-		// do stuff
+		PolarPlugin.instance().getBlockBrokenHandler().handle(event);
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)

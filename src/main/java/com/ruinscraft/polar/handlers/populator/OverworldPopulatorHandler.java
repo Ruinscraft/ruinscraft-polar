@@ -77,6 +77,9 @@ public class OverworldPopulatorHandler extends BlockPopulator implements Populat
 		case MAGMA_BLOCK:
 			set(block, Material.WATER);
 			return;
+		case GOLD_BLOCK:
+			set(block, Material.COAL_BLOCK);
+			return;
 		case SPAWNER:
 			set(block, Material.COAL_BLOCK);
 			return;

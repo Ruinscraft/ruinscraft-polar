@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.ruinscraft.polar.handlers.BlockBrokenHandler;
 import com.ruinscraft.polar.handlers.populator.OverworldPopulatorHandler;
 
 public class PolarPlugin extends JavaPlugin {
@@ -12,6 +13,8 @@ public class PolarPlugin extends JavaPlugin {
 	private static Random random;
 
 	private OverworldPopulatorHandler overworldPopulatorHandler;
+
+	private BlockBrokenHandler blockBrokenHandler;
 
 	public static final double CHANCE_CONSTANT = .002D;
 
@@ -24,6 +27,7 @@ public class PolarPlugin extends JavaPlugin {
 		instance = this;
 		random = new Random();
 		overworldPopulatorHandler = new OverworldPopulatorHandler();
+		blockBrokenHandler = new BlockBrokenHandler();
 		getServer().getPluginManager().registerEvents(new EnvironmentListener(), this);
 	}
 
@@ -38,6 +42,10 @@ public class PolarPlugin extends JavaPlugin {
 
 	public OverworldPopulatorHandler getOverworldPopulatorHandler() {
 		return overworldPopulatorHandler;
+	}
+
+	public BlockBrokenHandler getBlockBrokenHandler() {
+		return blockBrokenHandler;
 	}
 
 	public static void log(String message) {
