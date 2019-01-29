@@ -5,11 +5,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 import com.ruinscraft.polar.PolarPlugin;
 
-public class BlockBrokenHandler implements PolarHandler<BlockBreakEvent> {
+public class BlockBreakHandler implements PolarHandler<BlockBreakEvent> {
 
 	public void handle(BlockBreakEvent blockEvent) {
 		int x = blockEvent.getBlock().getX();
 		double c = PolarPlugin.instance().getChanceFromX(x);
+
 		if (x >= 0) handlePositive(blockEvent, c);
 		else handleNegative(blockEvent, c);
 	}
@@ -28,10 +29,12 @@ public class BlockBrokenHandler implements PolarHandler<BlockBreakEvent> {
 		Block block = blockEvent.getBlock();
 		switch (block.getType()) {
 		case COAL_ORE:
+			blockEvent.setDropItems(false);
 			block.getWorld().createExplosion(block.getLocation(), 3F * (float) (2/c), true);
 			return;
 		case COAL_BLOCK:
-			block.getWorld().createExplosion(block.getLocation(), 12F * (float) (2/c), true);
+			blockEvent.setDropItems(false);
+			block.getWorld().createExplosion(block.getLocation(), 6F * (float) (2/c), true);
 			return;
 		default:
 			return;
