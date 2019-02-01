@@ -1,5 +1,6 @@
 package com.ruinscraft.polar.handlers;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockBreakEvent;
 
@@ -30,10 +31,12 @@ public class BlockBreakHandler implements PolarHandler<BlockBreakEvent> {
 		switch (block.getType()) {
 		case COAL_ORE:
 			blockEvent.setDropItems(false);
+			block.setType(Material.AIR);
 			block.getWorld().createExplosion(block.getLocation(), 3F * (float) (2/c), true);
 			return;
 		case COAL_BLOCK:
 			blockEvent.setDropItems(false);
+			block.setType(Material.AIR);
 			block.getWorld().createExplosion(block.getLocation(), 6F * (float) (2/c), true);
 			return;
 		default:

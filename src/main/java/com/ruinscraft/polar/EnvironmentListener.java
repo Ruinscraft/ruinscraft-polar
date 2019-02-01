@@ -1,6 +1,7 @@
 package com.ruinscraft.polar;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.attribute.Attribute;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Fish;
 import org.bukkit.entity.Golem;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -18,8 +20,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.world.WorldInitEvent;
 
@@ -44,10 +48,10 @@ public class EnvironmentListener implements Listener {
 	public void onPlayerItemDamage(PlayerItemDamageEvent event) {
 		int x = event.getPlayer().getLocation().getBlockX();
 		double c = .7 - Math.abs(PolarPlugin.CHANCE_CONSTANT * (x/30));
-		if (c < .025) c = .025;
+		if (c < .08) c = .08;
 		if (x >= 0) return;
 
-		int damage = event.getDamage() * (int) (1 / (c));
+		int damage = event.getDamage() * (int) (1 / c);
 		event.setDamage(damage);
 	}
 
@@ -66,6 +70,32 @@ public class EnvironmentListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onBlockBreak(BlockBreakEvent event) {
 		PolarPlugin.instance().getBlockBrokenHandler().handle(event);
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+		if (!(event.getEntity() instanceof Player) || !(event.getDamager() instanceof Player)) {
+			return;
+		}
+		
+		int damagerX = event.getDamager().getLocation().getBlockX();
+		int hurtX = event.getEntity().getLocation().getBlockX();
+		if (damagerX >= 0 && hurtX >= 0) {
+			event.setCancelled(true);
+			event.getDamager().sendMessage(ChatColor.RED + "Hey, can't hit here!");
+			return;
+		} else if (hurtX >= 0 && damagerX < 0 || damagerX >= 0 && hurtX < 0) {
+			event.setCancelled(true);
+			event.getDamager().sendMessage(ChatColor.RED + "Hey, can't hit over there!");
+			return;
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onEntityExplode(EntityExplodeEvent event) {
+		if (event.getEntityType() == EntityType.PRIMED_TNT) {
+			event.setCancelled(true);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)

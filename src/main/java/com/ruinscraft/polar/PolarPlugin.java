@@ -61,7 +61,9 @@ public class PolarPlugin extends JavaPlugin {
 	}
 
 	public double getChanceFromX(int x) {
-		return 1 - (PolarPlugin.CHANCE_CONSTANT * Math.sqrt(Math.abs(x)));
+		double chance = PolarPlugin.CHANCE_CONSTANT * Math.sqrt(Math.abs(x));
+		if (chance > .95) chance = .95;
+		return 1 - chance;
 	}
 
 }

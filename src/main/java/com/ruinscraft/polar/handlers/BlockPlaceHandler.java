@@ -31,7 +31,17 @@ public class BlockPlaceHandler implements PolarHandler<BlockPlaceEvent> {
 
 		if (ChanceUtil.chance(2 * (1/c))) {
 			blockEvent.setCancelled(true);
-			block.getWorld().createExplosion(block.getLocation(), 4F, true);
+			block.getWorld().createExplosion(block.getLocation(), 8F * (float) Math.random(), true);
+
+			return;
+		}
+
+		if (ChanceUtil.chance(10 * (1/Math.pow(c - .05, 5)))) {
+			long ticksUntilCrumble = (long) (100 * Math.random() * c);
+			PolarPlugin.instance().getServer().getScheduler().runTaskLater(PolarPlugin.instance(), () -> {
+				block.breakNaturally();
+			}, ticksUntilCrumble);
+
 			return;
 		}
 
