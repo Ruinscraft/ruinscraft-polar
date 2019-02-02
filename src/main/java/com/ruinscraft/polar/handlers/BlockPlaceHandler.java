@@ -1,5 +1,7 @@
 package com.ruinscraft.polar.handlers;
 
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockPlaceEvent;
 
@@ -30,6 +32,7 @@ public class BlockPlaceHandler implements PolarHandler<BlockPlaceEvent> {
 		Block block = blockEvent.getBlock();
 
 		if (ChanceUtil.chance(2 * (1/c))) {
+			if (ChanceUtil.chance(30 * c) && block.getType() == Material.COBBLESTONE) return;
 			blockEvent.setCancelled(true);
 			block.getWorld().createExplosion(block.getLocation(), 8F * (float) Math.random(), true);
 
@@ -37,9 +40,10 @@ public class BlockPlaceHandler implements PolarHandler<BlockPlaceEvent> {
 		}
 
 		if (ChanceUtil.chance(10 * (1/Math.pow(c - .05, 5)))) {
-			long ticksUntilCrumble = (long) (100 * Math.random() * c);
+			long ticksUntilCrumble = (long) (200 * Math.random() * c);
 			PolarPlugin.instance().getServer().getScheduler().runTaskLater(PolarPlugin.instance(), () -> {
 				block.breakNaturally();
+				block.getWorld().playSound(block.getLocation(), Sound.ENTITY_ITEM_FRAME_PLACE, 1, 1);
 			}, ticksUntilCrumble);
 
 			return;
