@@ -28,22 +28,22 @@ public interface PlayerStatusHandler extends PolarHandler<Player> {
 				if (item == null) continue;
 				if (item.getType() == Material.COMPASS) {
 					ItemMeta meta = item.getItemMeta();
-					if (!meta.getDisplayName().contains("The Zero")) continue;
+					if (meta.getDisplayName().contains("The Zero") || meta.getDisplayName().isEmpty()) {
+						int x = player.getLocation().getBlockX();
 
-					int x = player.getLocation().getBlockX();
-
-					if (x > 1) {
-						meta.setDisplayName(ChatColor.GREEN + "The Zero is " + ChatColor.GRAY 
-								+ x + ChatColor.GREEN + " blocks away");
-					} else if (x >= 0) {
-						meta.setDisplayName(ChatColor.GREEN + "You are currently on The Zero");
-					} else if (x >= -2) {
-						meta.setDisplayName(ChatColor.RED + "You are currently on The Zero");
-					} else if (x < -2) {
-						meta.setDisplayName(ChatColor.GREEN + "The Zero is " + ChatColor.GRAY 
-								+ Math.abs(x + 1) + ChatColor.GREEN + " blocks away");
+						if (x > 1) {
+							meta.setDisplayName(ChatColor.GREEN + "The Zero is " + ChatColor.GRAY 
+									+ x + ChatColor.GREEN + " blocks away");
+						} else if (x >= 0) {
+							meta.setDisplayName(ChatColor.GREEN + "You are currently on The Zero");
+						} else if (x >= -2) {
+							meta.setDisplayName(ChatColor.RED + "You are currently on The Zero");
+						} else if (x < -2) {
+							meta.setDisplayName(ChatColor.RED + "The Zero is " + ChatColor.GRAY 
+									+ Math.abs(x + 1) + ChatColor.RED + " blocks away");
+						}
+						item.setItemMeta(meta);
 					}
-					item.setItemMeta(meta);
 				}
 			}
 		}
