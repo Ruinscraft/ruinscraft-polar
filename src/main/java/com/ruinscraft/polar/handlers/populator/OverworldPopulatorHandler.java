@@ -123,9 +123,8 @@ public class OverworldPopulatorHandler extends BlockPopulator implements Populat
 		case SPRUCE_LEAVES:
 		case BIRCH_LEAVES:
 		case JUNGLE_LEAVES:
-			set(block, Material.OAK_LEAVES);
 		case OAK_LEAVES:
-			if (chance(95 * (1/c))) set(block, Material.AIR);
+			set(block, Material.AIR);
 			return;
 		case GRASS:
 		case TALL_GRASS:
