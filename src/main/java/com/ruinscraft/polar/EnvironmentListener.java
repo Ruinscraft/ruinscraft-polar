@@ -31,11 +31,14 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.world.WorldInitEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.ruinscraft.polar.handlers.playerstatus.OverworldPlayerStatusHandler;
 import com.ruinscraft.polar.handlers.populator.OverworldPopulatorHandler;
 import com.ruinscraft.polar.util.ChanceUtil;
+import com.ruinscraft.polar.util.PolarUtil;
 
 public class EnvironmentListener implements Listener {
 
@@ -48,6 +51,16 @@ public class EnvironmentListener implements Listener {
 			PolarPlugin.instance().getServer().getScheduler().runTaskTimer(
 					PolarPlugin.instance(), new OverworldPlayerStatusHandler(event.getWorld()), 0, 100);
 		}
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		if (player.hasPlayedBefore()) return;
+
+		ItemStack compass = new ItemStack(Material.COMPASS);
+		PolarUtil.setCompass(compass, player.getLocation().getBlockX());
+		player.getInventory().setItem(8, compass);
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)

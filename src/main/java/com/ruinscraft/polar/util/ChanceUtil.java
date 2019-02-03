@@ -2,6 +2,10 @@ package com.ruinscraft.polar.util;
 
 import com.ruinscraft.polar.PolarPlugin;
 
+/**
+ * Utility class for probability methods
+ *
+ */
 public class ChanceUtil {
 
 	/**

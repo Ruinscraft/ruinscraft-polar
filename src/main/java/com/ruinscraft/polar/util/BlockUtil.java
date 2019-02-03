@@ -9,6 +9,10 @@ import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.Bisected.Half;
 import org.bukkit.block.data.type.Stairs;
 
+/**
+ * Utility class for convenient block editing functions
+ *
+ */
 public class BlockUtil {
 
 	public static Block set(Block block, Material material) {
