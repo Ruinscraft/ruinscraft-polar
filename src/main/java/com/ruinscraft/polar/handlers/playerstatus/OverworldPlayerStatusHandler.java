@@ -14,15 +14,19 @@ public class OverworldPlayerStatusHandler implements PlayerStatusHandler, Runnab
 
 	private World overworld;
 
+	private List<Player> currentPlayers;
+
 	public OverworldPlayerStatusHandler(World overworld) {
 		this.overworld = overworld;
 	}
 
 	@Override
 	public void run() {
-		List<Player> players = overworld.getPlayers();
+		this.currentPlayers = overworld.getPlayers();
 
-		for (Player player : players) {
+		updateCompasses();
+
+		for (Player player : this.currentPlayers) {
 			int x = player.getLocation().getBlockX();
 			double chanceMultiplier = 1 - (PolarPlugin.CHANCE_CONSTANT * Math.sqrt(Math.abs(x)));
 
@@ -54,6 +58,11 @@ public class OverworldPlayerStatusHandler implements PlayerStatusHandler, Runnab
 	@Override
 	public World getWorld() {
 		return this.overworld;
+	}
+
+	@Override
+	public List<Player> getCurrentPlayers() {
+		return this.currentPlayers;
 	}
 
 }

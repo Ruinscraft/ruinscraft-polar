@@ -2,9 +2,13 @@ package com.ruinscraft.polar;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
@@ -16,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -24,6 +29,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.world.WorldInitEvent;
 
@@ -53,6 +59,19 @@ public class EnvironmentListener implements Listener {
 
 		int damage = event.getDamage() * (int) (1 / c);
 		event.setDamage(damage);
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+		Block block = event.getClickedBlock();
+		if (block.getLocation().getBlockX() > 0) return;
+		if (event.getItem() == null) return;
+		if (event.getItem().getType() == Material.WATER_BUCKET) {
+			event.setCancelled(true);
+			block.getWorld().playSound(block.getLocation(), Sound.ENTITY_GENERIC_BURN, 1, 1);
+			block.getWorld().spawnParticle(Particle.SMOKE_LARGE, block.getLocation(), 3);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -123,7 +142,8 @@ public class EnvironmentListener implements Listener {
 		}
 
 		if (x >= 0) {
-			if (livingEntity instanceof Monster) {
+			if (livingEntity instanceof Monster ||
+					livingEntity.getType() == EntityType.PHANTOM) {
 				event.setCancelled(true);
 				return;
 			}

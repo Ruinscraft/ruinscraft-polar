@@ -12,6 +12,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.type.Stairs;
 import org.bukkit.enchantments.Enchantment;
@@ -81,7 +82,10 @@ public class OverworldPopulatorHandler extends BlockPopulator implements Populat
 			set(block, Material.COAL_BLOCK);
 			return;
 		case SPAWNER:
-			set(block, Material.COAL_BLOCK);
+			CreatureSpawner spawner = (CreatureSpawner) block.getState();
+			spawner.setMaxSpawnDelay(Integer.MAX_VALUE);
+			spawner.setDelay(Integer.MAX_VALUE);
+			spawner.update(true, false);
 			return;
 		case TRAPPED_CHEST:
 		case CHEST:
@@ -411,9 +415,9 @@ public class OverworldPopulatorHandler extends BlockPopulator implements Populat
 			if (chance(7 * (1/c))) set(block, Material.INFESTED_MOSSY_STONE_BRICKS);
 			return;
 		case STONE:
-			if (block.getY() < 14) {
+			if (block.getY() < 16) {
 				if (chanceOutOf(1 * (1/(c*c)), 15000)) set(block, Material.GOLD_BLOCK);
-				if (chanceOutOf(1 * (1/(c*c)), 240)) set(block, Material.DIAMOND_ORE);
+				if (chanceOutOf(1 * (1/(c*c)), 190)) set(block, Material.DIAMOND_ORE);
 				if (chanceOutOf(1 * (1/(c*c)), 160)) set(block, Material.GOLD_ORE);
 				if (chanceOutOf(1 * (1/(c*c)), 300)) set(block, Material.REDSTONE_ORE);
 			}
