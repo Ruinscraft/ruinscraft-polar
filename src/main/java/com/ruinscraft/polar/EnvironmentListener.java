@@ -138,6 +138,13 @@ public class EnvironmentListener implements Listener {
 		LivingEntity livingEntity = event.getEntity();
 		SpawnReason reason = event.getSpawnReason();
 
+		if (livingEntity.getType() == EntityType.SILVERFISH) {
+			if (PolarUtil.getNearbyEntityCount(livingEntity, 50) > 50) {
+				event.setCancelled(true);
+				return;
+			}
+		}
+
 		if (reason == SpawnReason.CUSTOM ||
 				reason == SpawnReason.REINFORCEMENTS ||
 				reason == SpawnReason.JOCKEY ||

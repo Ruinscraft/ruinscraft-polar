@@ -1,6 +1,10 @@
 package com.ruinscraft.polar.util;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -26,6 +30,20 @@ public class PolarUtil {
 			}
 			item.setItemMeta(meta);
 		}
+	}
+
+	public static int getNearbyEntityCount(Entity entity, int radius) {
+		return getNearbyEntityCount(entity, entity.getType(), radius);
+	}
+
+	public static int getNearbyEntityCount(Entity entity, EntityType entityType, int radius) {
+		int i = 0;
+
+		for (Entity nearbyEntity : entity.getNearbyEntities(radius, radius, radius)) {
+			if (nearbyEntity.getType() == entityType) i++;
+		}
+
+		return i;
 	}
 
 }
