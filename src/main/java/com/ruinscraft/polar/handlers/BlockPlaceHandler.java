@@ -43,7 +43,7 @@ public class BlockPlaceHandler implements PolarHandler<BlockPlaceEvent> {
 
 		if (ChanceUtil.chance(2 * (1/c))) {
 			blockEvent.setCancelled(true);
-			block.getWorld().createExplosion(block.getLocation(), 8F * (float) Math.random(), true);
+			block.getWorld().createExplosion(block.getLocation(), 6F * (float) Math.random(), true);
 			return;
 		}
 

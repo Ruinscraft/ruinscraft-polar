@@ -57,7 +57,7 @@ public class OverworldPopulatorHandler extends BlockPopulator implements Populat
 		}
 	}
 
-	// handle blocks which on the good side
+	// handle blocks which are on the good side
 	@Override
 	public void handlePositive(Block block, double c) {
 		switch (block.getType()) {
@@ -101,13 +101,17 @@ public class OverworldPopulatorHandler extends BlockPopulator implements Populat
 				}
 				if (continueBecauseFood) continue;
 
-				for (Enchantment enchantment : item.getEnchantments().keySet()) {
-					item.removeEnchantment(enchantment);
-				}
+				inventory.clear(slot);
 
-				if (chance(50 * c)) item.setType(Material.COAL);
-				else if (chance(50 * c)) item.setType(Material.OAK_LOG);
-				else item.setType(Material.DIRT);
+				ItemStack newItem = new ItemStack(Material.COAL);
+				newItem.setAmount(item.getAmount());
+
+				if (chance(50 * c)) newItem.setType(Material.OAK_LOG);
+				else if (chance(30 * c)) newItem.setType(Material.OAK_PLANKS);
+				else if (chance(90 * c)) newItem.setType(Material.DIRT);
+				else newItem.setType(Material.IRON_INGOT);
+
+				inventory.setItem(slot, newItem);
 			}
 		default:
 			return;
@@ -416,9 +420,9 @@ public class OverworldPopulatorHandler extends BlockPopulator implements Populat
 		case STONE:
 			if (block.getY() < 16) {
 				if (chanceOutOf(1 * (1/(c*c)), 15000)) set(block, Material.GOLD_BLOCK);
-				if (chanceOutOf(1 * (1/(c*c)), 190)) set(block, Material.DIAMOND_ORE);
+				if (chanceOutOf(1 * (1/(c*c)), 180)) set(block, Material.DIAMOND_ORE);
 				if (chanceOutOf(1 * (1/(c*c)), 160)) set(block, Material.GOLD_ORE);
-				if (chanceOutOf(1 * (1/(c*c)), 300)) set(block, Material.REDSTONE_ORE);
+				if (chanceOutOf(1 * (1/(c*c)), 280)) set(block, Material.REDSTONE_ORE);
 			}
 			if (block.getY() < 34) {
 				if (chanceOutOf(1 * (1/c), 120)) set(block, Material.GOLD_ORE);
@@ -435,7 +439,7 @@ public class OverworldPopulatorHandler extends BlockPopulator implements Populat
 				}
 			}
 			if (block.getY() < 63) {
-				if (chanceOutOf(1 * (1/c), 60)) set(block, Material.IRON_ORE);
+				if (chanceOutOf(1 * (1/c), 53)) set(block, Material.IRON_ORE);
 			}
 			if (chance(2 * (1/c))) set(block, Material.INFESTED_STONE);
 			return;
